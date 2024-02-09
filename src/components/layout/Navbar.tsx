@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import SearchInput from "../SearchInput";
 import { ModeToggle } from "../Theme/themeToggole";
+import { NavManu } from "../NavManu";
 
 type Props = {};
 
@@ -29,7 +30,8 @@ const Navbar = (props: Props) => {
           </Link>
           <SearchInput />
           <div className="flex gap-3 items-center">
-            <div className="">
+            <div className=" flex gap-2 items-center">
+              <NavManu />
               <ModeToggle />
             </div>
 

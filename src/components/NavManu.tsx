@@ -19,13 +19,22 @@ export function NavManu() {
         <ChevronsUpDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => router.push("/hotel/new")}>
+        <DropdownMenuItem
+          className="cursor-pointer flex gap-2 items-center"
+          onClick={() => router.push("/hotel/new")}
+        >
           <Plus size={15} /> <span>Add Hotel</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push("/hotel/new")}>
+        <DropdownMenuItem
+          className="cursor-pointer flex gap-2 items-center"
+          onClick={() => router.push("/hotel/new")}
+        >
           <Hotel size={15} /> <span>My Hotels</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push("/hotel/new")}>
+        <DropdownMenuItem
+          className="cursor-pointer flex gap-2 items-center"
+          onClick={() => router.push("/hotel/new")}
+        >
           <BookOpenCheck size={15} /> <span>My Bookings</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
