@@ -18,7 +18,7 @@ model Hotel {
   description         String
   country             String
   city                String
-  street              String
+  state               String
   image               String
   locationDescription String
   gym                 Boolean   @default(false)
@@ -87,6 +87,7 @@ model Booking {
   currency          String
   totalPrice        Float
   paymentStatus     Boolean @default(false)
+  paymentIntentId   String  @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
