@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import SearchInput from "../SearchInput";
+import { ModeToggle } from "../Theme/themeToggole";
 
 type Props = {};
 
@@ -25,8 +27,11 @@ const Navbar = (props: Props) => {
               <div className="font-bold text-xl ">StayHotel</div>
             </div>
           </Link>
+          <SearchInput />
           <div className="flex gap-3 items-center">
-            <div className="">Theme</div>
+            <div className="">
+              <ModeToggle />
+            </div>
 
             {userId ? (
               <>
