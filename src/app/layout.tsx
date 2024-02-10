@@ -3,7 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "@/components/layout/Navbar";
+import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/Theme/theme-provider";
+import Container from "@/components/Container";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,8 +32,11 @@ export default function RootLayout({
           >
             <main className="flex flex-col min-h-screen bg-secondary">
               <Navbar />
-              <section className="flex-grow">{children}</section>
+              <section className="flex-grow">
+                <Container>{children}</Container>
+              </section>
             </main>
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
