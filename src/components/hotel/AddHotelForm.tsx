@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Hotel, Room } from "@prisma/client";
 import React, { use, useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import {
   Form,
   FormControl,
@@ -17,7 +18,10 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
 import { useToast } from "../ui/use-toast";
-import { UploadDropzone } from "@/lib/uploadthing";
+import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
+import Image from "next/image";
+import { Button } from "../ui/button";
+import { Loader2, XCircle } from "lucide-react";
 
 export type HotelWithRooms = Hotel & {
   rooms: Room[];
@@ -29,6 +33,7 @@ interface AddHotelFromProps {
 
 const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
   const [image, setImage] = useState<string | undefined>(hotel?.image);
+  const [imageIsDeleting, setImageIsDeleting] = useState<boolean>(false);
   const { toast } = useToast();
 
   const form = useForm<HotelAddSchemaType>({
@@ -57,6 +62,35 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
 
   const onSubmit = (values: HotelAddSchemaType) => {
     console.log(values);
+  };
+
+  const handleImageDelete = async (image: string) => {
+    setImageIsDeleting(true);
+    const imageKey = image.substring(image.lastIndexOf("/") + 1);
+
+    axios
+      .post("/api/uploadthing/delete", { imageKey })
+      .then((res) => {
+        if (res.data.success) {
+          setImage("");
+          toast({
+            variant: "default",
+            title: "Image Deleted",
+            description: "Image has been deleted",
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        toast({
+          variant: "destructive",
+          title: "Error Deleting Image",
+          description: "Image has not been deleted",
+        });
+      })
+      .finally(() => {
+        setImageIsDeleting(false);
+      });
   };
 
   return (
@@ -295,15 +329,34 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
 
                     <FormControl className="px-5">
                       {image ? (
-                        <></>
+                        <>
+                          <div className="relative max-w-[400px] min-w-[200px] max-h-[400px] min-h-[200px]  mt-4">
+                            <Image
+                              src={image}
+                              alt="hotel-image"
+                              className="object-contain"
+                              width={400}
+                              height={400}
+                            />
+                            <Button
+                              onClick={() => handleImageDelete(image)}
+                              type="button"
+                              size="sm"
+                              variant="ghost"
+                              className="absolute right-[-12px] top-0"
+                            >
+                              {imageIsDeleting ? <Loader2 /> : <XCircle />}
+                            </Button>
+                          </div>
+                        </>
                       ) : (
                         <>
                           <div className="flex flex-col items-center justify-center max-w-[4000px] rounded mt-4 p-12 border-2 border-dotted ">
-                            <UploadDropzone
+                            <UploadButton
                               endpoint="imageUploader"
                               onClientUploadComplete={(res) => {
                                 console.log("Files: ", res);
-
+                                setImage(res[0].url);
                                 toast({
                                   variant: "default",
                                   title: "Image Uploaded",
@@ -311,6 +364,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                                 });
                               }}
                               onUploadError={(error: Error) => {
+                                console.log("upload", error);
                                 toast({
                                   variant: "destructive",
                                   title: "Erorr Uploading Image",
