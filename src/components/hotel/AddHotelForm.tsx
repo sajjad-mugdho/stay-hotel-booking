@@ -16,9 +16,8 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
-import { UploadButton, UploadDropzone } from "../uploadThing";
-import { set } from "zod";
 import { useToast } from "../ui/use-toast";
+import { UploadDropzone } from "@/lib/uploadthing";
 
 export type HotelWithRooms = Hotel & {
   rooms: Room[];
@@ -34,7 +33,26 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
 
   const form = useForm<HotelAddSchemaType>({
     resolver: zodResolver(HotelAddSchema),
-    defaultValues: {},
+    defaultValues: {
+      title: "",
+      description: "",
+      country: "",
+      city: "",
+      state: "",
+      image: "",
+      locationDescription: "",
+      gym: false,
+      spa: false,
+      laundry: false,
+      restaurant: false,
+      bar: false,
+      swimmingPool: false,
+      freeWifi: false,
+      freeParking: false,
+      bikeRental: false,
+      movieNight: false,
+      coffeeShop: false,
+    },
   });
 
   const onSubmit = (values: HotelAddSchemaType) => {
@@ -281,11 +299,11 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                       ) : (
                         <>
                           <div className="flex flex-col items-center justify-center max-w-[4000px] rounded mt-4 p-12 border-2 border-dotted ">
-                            <UploadButton
+                            <UploadDropzone
                               endpoint="imageUploader"
                               onClientUploadComplete={(res) => {
                                 console.log("Files: ", res);
-                                setImage(res[0].url);
+
                                 toast({
                                   variant: "default",
                                   title: "Image Uploaded",
