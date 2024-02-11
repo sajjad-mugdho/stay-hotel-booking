@@ -2,7 +2,7 @@
 import { HotelAddSchema, HotelAddSchemaType } from "@/schema/addHotelSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Hotel, Room } from "@prisma/client";
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import {
@@ -14,6 +14,14 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
@@ -22,6 +30,8 @@ import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Loader2, XCircle } from "lucide-react";
+import useLocation from "@/hooks/useLocation";
+import { ICity, IState } from "country-state-city";
 
 export type HotelWithRooms = Hotel & {
   rooms: Room[];
@@ -34,7 +44,14 @@ interface AddHotelFromProps {
 const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
   const [image, setImage] = useState<string | undefined>(hotel?.image);
   const [imageIsDeleting, setImageIsDeleting] = useState<boolean>(false);
+  const [states, setStates] = useState<IState[]>([]);
+  const [cities, setCities] = useState<ICity[]>([]);
+
   const { toast } = useToast();
+
+  const { getAllCountries, getCountryStates, getStateCitys } = useLocation();
+
+  const countries = getAllCountries();
 
   const form = useForm<HotelAddSchemaType>({
     resolver: zodResolver(HotelAddSchema),
@@ -59,6 +76,25 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
       coffeeShop: false,
     },
   });
+
+  useEffect(() => {
+    const selectedCountry = form.watch("country");
+    const countryStates = getCountryStates(selectedCountry);
+    if (countryStates) {
+      setStates(countryStates);
+    }
+  }, [form.watch("country")]);
+
+  useEffect(() => {
+    const selectedCountry = form.watch("country");
+    const selectedState = form.watch("state");
+    const selectedCities = getStateCitys(selectedCountry, selectedState);
+
+    // @ts-ignore
+    if (selectedCities) {
+      setCities(selectedCities);
+    }
+  }, [form.watch("country"), form.watch("state")]);
 
   const onSubmit = (values: HotelAddSchemaType) => {
     console.log(values);
@@ -380,7 +416,133 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                 )}
               />
             </div>
-            <div className="flex flex-1 flex-col gap-6">part-2</div>
+            <div className="flex flex-1 flex-col gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Select Country *</FormLabel>
+                      <FormDescription>
+                        Select your hotel country
+                      </FormDescription>
+                      <Select
+                        disabled={form.formState.isSubmitting}
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="bg-background">
+                          <SelectValue
+                            defaultValue={field.value}
+                            placeholder="Select a country"
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {countries.map((country) => (
+                            <SelectItem
+                              key={country.isoCode}
+                              value={country.isoCode}
+                            >
+                              {country.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Select State *</FormLabel>
+                      <FormDescription>Select your hotel State</FormDescription>
+                      <Select
+                        disabled={
+                          form.formState.isSubmitting || states.length < 1
+                        }
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="bg-background">
+                          <SelectValue
+                            defaultValue={field.value}
+                            placeholder="Select a State"
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {states.map((state) => (
+                            <SelectItem
+                              key={state.isoCode}
+                              value={state.isoCode}
+                            >
+                              {state.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/*  */}
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Select city *</FormLabel>
+                    <FormDescription>Select your hotel city</FormDescription>
+                    <Select
+                      disabled={
+                        form.formState.isSubmitting || cities.length < 1
+                      }
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="bg-background">
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a city"
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {cities.map((city, i) => (
+                          <SelectItem key={i + 1} value={city.name}>
+                            {city.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="locationDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Hotel Adress *</FormLabel>
+
+                    <FormControl>
+                      <Textarea
+                        placeholder="Beatch Hotel is Location details..."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Provide a Address for your hotel
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
         </form>
       </Form>

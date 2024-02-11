@@ -12,7 +12,7 @@ generator client {
 
 model Hotel {
   id                  String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId              String    @db.ObjectId
+  userId              String    @unique @db.ObjectId
   title               String
   description         String
   country             String
@@ -76,7 +76,7 @@ model Room {
 model Booking {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
   username     String
-  userId       String @db.ObjectId
+  userId       String @unique @db.ObjectId
   hotelOwnerId String
 
   startDate DateTime
