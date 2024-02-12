@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 "use client";
 import { HotelAddSchema, HotelAddSchemaType } from "@/schema/addHotelSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,7 +31,8 @@ import { useToast } from "../ui/use-toast";
 import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { Loader2, XCircle } from "lucide-react";
+import { Button as Button2 } from "../ui/button-2";
+import { Loader2, PencilIcon, XCircle } from "lucide-react";
 import useLocation from "@/hooks/useLocation";
 import { ICity, IState } from "country-state-city";
 
@@ -55,7 +58,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
 
   const form = useForm<HotelAddSchemaType>({
     resolver: zodResolver(HotelAddSchema),
-    defaultValues: {
+    defaultValues: hotel || {
       title: "",
       description: "",
       country: "",
@@ -76,6 +79,16 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
       coffeeShop: false,
     },
   });
+
+  useEffect(() => {
+    if (typeof image === "string") {
+      form.setValue("image", image, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [image]);
 
   useEffect(() => {
     const selectedCountry = form.watch("country");
@@ -527,7 +540,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                 name="locationDescription"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Hotel Adress *</FormLabel>
+                    <FormLabel>Hotel Address *</FormLabel>
 
                     <FormControl>
                       <Textarea
@@ -542,6 +555,25 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                   </FormItem>
                 )}
               />
+              <div className="flex justify-between gap-2 flex-wrap">
+                {hotel ? (
+                  <>
+                    <Button2 type="submit">
+                      <PencilIcon /> Update{" "}
+                    </Button2>
+                  </>
+                ) : (
+                  <>
+                    <Button2
+                      variant="default"
+                      isLoading={form.formState.isSubmitting}
+                      type="submit"
+                    >
+                      Submit{" "}
+                    </Button2>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </form>
