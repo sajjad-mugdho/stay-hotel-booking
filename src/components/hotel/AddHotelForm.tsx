@@ -32,9 +32,19 @@ import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Button as Button2 } from "../ui/button-2";
-import { Loader2, PencilIcon, XCircle } from "lucide-react";
+import {
+  Edit,
+  Edit3,
+  EyeIcon,
+  FormInput,
+  Loader2,
+  PencilIcon,
+  Trash2,
+  XCircle,
+} from "lucide-react";
 import useLocation from "@/hooks/useLocation";
 import { ICity, IState } from "country-state-city";
+import { useRouter } from "next/navigation";
 
 export type HotelWithRooms = Hotel & {
   rooms: Room[];
@@ -47,10 +57,12 @@ interface AddHotelFromProps {
 const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
   const [image, setImage] = useState<string | undefined>(hotel?.image);
   const [imageIsDeleting, setImageIsDeleting] = useState<boolean>(false);
+  const [hotelIsDeleting, setHotelIsDeleting] = useState<boolean>(false);
   const [states, setStates] = useState<IState[]>([]);
   const [cities, setCities] = useState<ICity[]>([]);
 
   const { toast } = useToast();
+  const router = useRouter();
 
   const { getAllCountries, getCountryStates, getStateCitys } = useLocation();
 
@@ -109,8 +121,47 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
     }
   }, [form.watch("country"), form.watch("state")]);
 
-  const onSubmit = (values: HotelAddSchemaType) => {
-    console.log(values);
+  const onSubmit = async (values: HotelAddSchemaType) => {
+    if (hotel) {
+      //update
+      await axios
+        .patch(`/api/hotel/${hotel.id}`, values)
+        .then((res) => {
+          toast({
+            variant: "success",
+            title: "Success",
+            description: "🎉 Hotel Edited Succsessfully",
+          });
+          router.push(`/hotel/${res.data.id}`);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Something went wrong",
+          });
+        });
+    } else {
+      await axios
+        .post("/api/hotel", values)
+        .then((res) => {
+          toast({
+            variant: "success",
+            title: "Success",
+            description: "🎉 Hotel Created",
+          });
+          router.push(`/hotel/${res.data.id}`);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Something went wrong",
+          });
+        });
+    }
   };
 
   const handleImageDelete = async (image: string) => {
@@ -124,8 +175,8 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
           setImage("");
           toast({
             variant: "default",
-            title: "Image Deleted",
-            description: "Image has been deleted",
+            title: " Deleted",
+            description: "📌 Image has been deleted",
           });
         }
       })
@@ -140,6 +191,32 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
       .finally(() => {
         setImageIsDeleting(false);
       });
+  };
+
+  const handleDeleteButton = async (hotel: HotelWithRooms) => {
+    setHotelIsDeleting(true);
+    const imageKey = hotel.image.substring(hotel.image.lastIndexOf("/") + 1);
+    try {
+      await axios.post("/api/uploadthing/delete", { imageKey });
+      await axios.delete(`/api/hotel/${hotel.id}`);
+
+      setHotelIsDeleting(false);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Hotel has been deleted",
+      });
+
+      router.push(`/hotel/new`);
+    } catch (err) {
+      console.log(err);
+
+      toast({
+        variant: "destructive",
+        title: "Error ",
+        description: `Hotel has not been deleted ${err}`,
+      });
+    }
   };
 
   return (
@@ -555,21 +632,34 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-between gap-2 flex-wrap">
+              <div className="flex justify-between gap-5 flex-wrap">
                 {hotel ? (
                   <>
-                    <Button2 type="submit">
-                      <PencilIcon /> Update{" "}
+                    <Button2
+                      isLoading={form.formState.isSubmitting}
+                      type="submit"
+                    >
+                      <Edit className="w-5 h-5 mr-3" /> Update{" "}
+                    </Button2>
+                    <Button2 variant="ghost">
+                      <EyeIcon className="w-5 h-5 mr-3" /> View{" "}
+                    </Button2>
+                    <Button2
+                      variant="destructive"
+                      isLoading={hotelIsDeleting}
+                      onClick={() => handleDeleteButton(hotel)}
+                    >
+                      <Trash2 className="w-5 h-5 mr-3" /> Delete{" "}
                     </Button2>
                   </>
                 ) : (
                   <>
                     <Button2
-                      variant="default"
+                      variant="outline"
                       isLoading={form.formState.isSubmitting}
                       type="submit"
                     >
-                      Submit{" "}
+                      <Edit3 className="w-5 h-5 mr-3" /> Submit{" "}
                     </Button2>
                   </>
                 )}

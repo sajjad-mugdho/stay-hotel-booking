@@ -8,8 +8,8 @@ const HotelAddSchema = z.object({
     message: "Description must be at least 10 characters long",
   }),
   country: z.string(),
-  state: z.string(),
-  city: z.string(),
+  state: z.string().optional(),
+  city: z.string().optional(),
   image: z.string().min(3, { message: "Image is requred" }),
   locationDescription: z
     .string()
