@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 "use client";
+
 import { HotelAddSchema, HotelAddSchemaType } from "@/schema/addHotelSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Hotel, Room } from "@prisma/client";
@@ -566,7 +567,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                       <EyeIcon className="w-5 h-5 mr-3" /> View{" "}
                     </Button2>
                     {/*  */}
-                    <Dialog>
+                    <Dialog open={open} onOpenChange={setOpen}>
                       <DialogTrigger>
                         <Button
                           type="button"
@@ -577,7 +578,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="max-w-[900px] w-[90%]">
-                        <DialogHeader>
+                        <DialogHeader className="px-2">
                           <DialogTitle className="text-center">
                             Add your hotel rooms
                           </DialogTitle>

@@ -1,4 +1,5 @@
 "use client";
+
 import { RoomAddSchema, RoomAddSchemaType } from "@/schema/addRoomSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Hotel, Room } from "@prisma/client";
@@ -37,7 +38,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
       soundProof: false,
     },
   });
-  return <>add</>;
+  return <div className="">ADD Rooms</div>;
 };
 
 export default AddRoom;
