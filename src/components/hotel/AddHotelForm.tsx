@@ -571,7 +571,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                       <DialogTrigger>
                         <Button
                           type="button"
-                          className="bg-indigo-500 hover:bg-indigo-300 text-black "
+                          className="bg-indigo-500 hover:bg-indigo-300 text-white hover:text-gray-900"
                         >
                           <PlusIcon className="w-5 h-5 mr-3" />
                           Add Room
