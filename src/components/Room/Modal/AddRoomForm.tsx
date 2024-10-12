@@ -13,16 +13,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Button as Button2 } from "@/components/ui/button-2";
 import { toast } from "@/components/ui/use-toast";
 import { UploadButton } from "@/lib/uploadthing";
 import { RoomAddSchema, RoomAddSchemaType } from "@/schema/addRoomSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Hotel, Room } from "@prisma/client";
 import axios from "axios";
-import { Loader2, XCircle } from "lucide-react";
+import { Edit, Edit3, EyeIcon, Loader2, Trash2, XCircle } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 type RoomProps = {
   hotel?: Hotel & {
@@ -33,6 +35,7 @@ type RoomProps = {
 };
 
 const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
+  const router = useRouter();
   const [image, setImage] = useState<string | undefined>(room?.image);
   const [imageIsDeleting, setImageIsDeleting] = useState<boolean>(false);
 
@@ -64,6 +67,61 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
       soundProof: false,
     },
   });
+
+  const onSubmit = async (values: RoomAddSchemaType) => {
+    if (hotel && room) {
+      //update
+      await axios
+        .patch(`/api/room/${hotel.id}`, values)
+        .then((res) => {
+          toast({
+            variant: "success",
+            title: "Success",
+            description: "🎉 Room Edited Successfully",
+          });
+          router.refresh();
+          handleDialogOpen();
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Something went wrong",
+          });
+        });
+    } else {
+      await axios
+        .post("/api/room", { ...values, hotelId: hotel?.id })
+        .then((res) => {
+          toast({
+            variant: "success",
+            title: "Success",
+            description: "🎉 Room Created",
+          });
+          router.refresh();
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Something went wrong",
+          });
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (typeof image === "string") {
+      form.setValue("image", image, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [ image]);
+
   const handleImageDelete = async (image: string) => {
     setImageIsDeleting(true);
     const imageKey = image.substring(image.lastIndexOf("/") + 1);
@@ -326,40 +384,19 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="guestCount"
-                render={({ field }) => <FormItem></FormItem>}
-              />
-              <FormField
-                control={form.control}
-                name="kingBed"
-                render={({ field }) => <FormItem></FormItem>}
-              />
-              <FormField
-                control={form.control}
-                name="queenBed"
-                render={({ field }) => <FormItem></FormItem>}
-              />
             </div>
             <div className="flex-1 flex flex-col gap-6">
               <FormField
                 control={form.control}
-                name="roomPrice"
+                name="breakFastPrice"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Room Price In USD *</FormLabel>
+                    <FormLabel>Breakfast Price In USD</FormLabel>
                     <FormDescription>
-                      state the price of the room in USD per night
+                      Breakfast price for this room
                     </FormDescription>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min={0}
-                        placeholder="100"
-                        {...field}
-                      />
+                      <Input type="number" min={0} placeholder="" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -368,12 +405,12 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
 
               <FormField
                 control={form.control}
-                name="bedCount"
+                name="kingBed"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Room Price In USD *</FormLabel>
+                    <FormLabel>King Bed</FormLabel>
                     <FormDescription>
-                      How many beds are available for this room?
+                      How many king beds are available for this room?
                     </FormDescription>
                     <FormControl>
                       <Input
@@ -390,12 +427,12 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
               />
               <FormField
                 control={form.control}
-                name="guestCount"
+                name="queenBed"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Guest Count *</FormLabel>
+                    <FormLabel>Queen Bed</FormLabel>
                     <FormDescription>
-                      How many guest are allow for this room?
+                      How many queen beds are available for this room?
                     </FormDescription>
                     <FormControl>
                       <Input
@@ -432,23 +469,40 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="guestCount"
-                render={({ field }) => <FormItem></FormItem>}
-              />
-              <FormField
-                control={form.control}
-                name="kingBed"
-                render={({ field }) => <FormItem></FormItem>}
-              />
-              <FormField
-                control={form.control}
-                name="queenBed"
-                render={({ field }) => <FormItem></FormItem>}
-              />
             </div>
+          </div>
+          <div className="flex justify-between gap-5 flex-wrap">
+            {room ? (
+              <>
+                <Button2 isLoading={form.formState.isSubmitting} type="submit">
+                  <Edit className="w-5 h-5 mr-3" /> Update{" "}
+                </Button2>
+                {/*  */}
+                <Button2>
+                  <EyeIcon className="w-5 h-5 mr-3" /> View{" "}
+                </Button2>
+                {/*  */}
+
+                {/*  */}
+                <Button2
+                  variant="destructive"
+                  // isLoading={hotelIsDeleting}
+                  // onClick={() => handleDeleteButton(hotel)}
+                >
+                  <Trash2 className="w-5 h-5 mr-3" /> Delete{" "}
+                </Button2>
+              </>
+            ) : (
+              <>
+                <Button2
+                  variant="outline"
+                  isLoading={form.formState.isSubmitting}
+                  type="submit"
+                >
+                  <Edit3 className="w-5 h-5 mr-3" /> Submit{" "}
+                </Button2>
+              </>
+            )}
           </div>
         </form>
       </Form>
