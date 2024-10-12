@@ -19,6 +19,10 @@ const RoomAddSchema = z.object({
     .number()
     .int()
     .min(0, { message: "Guest count must be a non-negative integer" }),
+  bathroomCount: z
+    .number()
+    .int()
+    .min(0, { message: "Bathroom count must be a non-negative integer" }),
   kingBed: z
     .number()
     .int()

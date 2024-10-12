@@ -33,8 +33,10 @@ type RoomProps = {
 };
 
 const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
-  const [image, setImage] = useState<string | undefined>(hotel?.image);
+  const [image, setImage] = useState<string | undefined>(room?.image);
   const [imageIsDeleting, setImageIsDeleting] = useState<boolean>(false);
+
+  // const toast = useToast();
 
   const form = useForm<RoomAddSchemaType>({
     resolver: zodResolver(RoomAddSchema),
@@ -44,6 +46,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
       bedCount: 0,
       bedRoomCount: 0,
       guestCount: 0,
+      bathroomCount: 0,
       kingBed: 0,
       queenBed: 0,
       image: "",
@@ -90,7 +93,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
       });
   };
   return (
-    <div className="max-h-[75vh] overflow-y-auto px-2">
+    <div className="max-h-[75vh] overflow-y-auto scrollbar-hide px-2">
       <Form {...form}>
         <form className="space-y-6">
           <FormField
@@ -233,6 +236,220 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
               </FormItem>
             )}
           />
+          <div className="flex flex-row gap-6">
+            <div className="flex-1 flex flex-col gap-6">
+              <FormField
+                control={form.control}
+                name="roomPrice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Room Price In USD *</FormLabel>
+                    <FormDescription>
+                      state the price of the room in USD per night
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        placeholder="100"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bedCount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Room Price In USD *</FormLabel>
+                    <FormDescription>
+                      How many beds are available for this room?
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={8}
+                        placeholder="1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="guestCount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Guest Count *</FormLabel>
+                    <FormDescription>
+                      How many guest are allow for this room?
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={10}
+                        placeholder="1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="bathroomCount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bath Room Count *</FormLabel>
+                    <FormDescription>
+                      How many bathroom available in this Room?
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={10}
+                        placeholder="1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="guestCount"
+                render={({ field }) => <FormItem></FormItem>}
+              />
+              <FormField
+                control={form.control}
+                name="kingBed"
+                render={({ field }) => <FormItem></FormItem>}
+              />
+              <FormField
+                control={form.control}
+                name="queenBed"
+                render={({ field }) => <FormItem></FormItem>}
+              />
+            </div>
+            <div className="flex-1 flex flex-col gap-6">
+              <FormField
+                control={form.control}
+                name="roomPrice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Room Price In USD *</FormLabel>
+                    <FormDescription>
+                      state the price of the room in USD per night
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        placeholder="100"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bedCount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Room Price In USD *</FormLabel>
+                    <FormDescription>
+                      How many beds are available for this room?
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={8}
+                        placeholder="1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="guestCount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Guest Count *</FormLabel>
+                    <FormDescription>
+                      How many guest are allow for this room?
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={10}
+                        placeholder="1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="bathroomCount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bath Room Count *</FormLabel>
+                    <FormDescription>
+                      How many bathroom available in this Room?
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={10}
+                        placeholder="1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="guestCount"
+                render={({ field }) => <FormItem></FormItem>}
+              />
+              <FormField
+                control={form.control}
+                name="kingBed"
+                render={({ field }) => <FormItem></FormItem>}
+              />
+              <FormField
+                control={form.control}
+                name="queenBed"
+                render={({ field }) => <FormItem></FormItem>}
+              />
+            </div>
+          </div>
         </form>
       </Form>
     </div>
