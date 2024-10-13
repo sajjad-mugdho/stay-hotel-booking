@@ -8,36 +8,62 @@ const RoomAddSchema = z.object({
     .string()
     .min(10, { message: "Description must be at least 10 characters long" }),
   bedCount: z
-    .number()
-    .int()
-    .min(0, { message: "Bed count must be a non-negative integer" }),
+    .string()
+    .transform((val) => parseInt(val, 10)) // Convert to number
+    .refine((val) => !isNaN(val), { message: "Must be a valid number" })
+    .refine((val) => val >= 0, {
+      message: "Bed count must be a non-negative integer",
+    }),
   bedRoomCount: z
-    .number()
-    .int()
-    .min(0, { message: "Bedroom count must be a non-negative integer" }),
+    .string()
+    .transform((val) => parseInt(val, 10)) // Convert to number
+    .refine((val) => !isNaN(val), { message: "Must be a valid number" })
+    .refine((val) => val >= 0, {
+      message: "Bedroom count must be a non-negative integer",
+    }),
   guestCount: z
-    .number()
-    .int()
-    .min(0, { message: "Guest count must be a non-negative integer" }),
+    .string()
+    .transform((val) => parseInt(val, 10)) // Convert to number
+    .refine((val) => !isNaN(val), { message: "Must be a valid number" })
+    .refine((val) => val >= 0, {
+      message: "Guest count must be a non-negative integer",
+    }),
   bathroomCount: z
-    .number()
-    .int()
-    .min(0, { message: "Bathroom count must be a non-negative integer" }),
+    .string()
+    .transform((val) => parseInt(val, 10)) // Convert to number
+    .refine((val) => !isNaN(val), { message: "Must be a valid number" })
+    .refine((val) => val >= 0, {
+      message: "Bathroom count must be a non-negative integer",
+    }),
   kingBed: z
-    .number()
-    .int()
-    .min(0, { message: "King bed count must be a non-negative integer" }),
+    .string()
+    .transform((val) => parseInt(val, 10)) // Convert to number
+    .refine((val) => !isNaN(val), { message: "Must be a valid number" })
+    .refine((val) => val >= 0, {
+      message: "King bed count must be a non-negative integer",
+    }),
   queenBed: z
-    .number()
-    .int()
-    .min(0, { message: "Queen bed count must be a non-negative integer" }),
+    .string()
+    .transform((val) => parseInt(val, 10)) // Convert to number
+    .refine((val) => !isNaN(val), { message: "Must be a valid number" })
+    .refine((val) => val >= 0, {
+      message: "Queen bed count must be a non-negative integer",
+    }),
   image: z.string().min(3, { message: "Image is required" }),
   roomPrice: z
-    .number()
-    .min(0, { message: "Room price must be a non-negative number" }),
+    .string()
+    .transform((val) => parseFloat(val)) // Convert to float
+    .refine((val) => !isNaN(val), { message: "Must be a valid number" })
+    .refine((val) => val >= 0, {
+      message: "Room price must be a non-negative number",
+    }),
   breakFastPrice: z
-    .number()
-    .min(0, { message: "Breakfast price must be a non-negative number" }),
+    .string()
+    .transform((val) => parseFloat(val)) // Convert to float
+    .refine((val) => !isNaN(val), { message: "Must be a valid number" })
+    .refine((val) => val >= 0, {
+      message: "Breakfast price must be a non-negative number",
+    }),
   roomService: z.boolean().optional(),
   tv: z.boolean().optional(),
   freeWifi: z.boolean().optional(),

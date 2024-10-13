@@ -38,10 +38,11 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
   const router = useRouter();
   const [image, setImage] = useState<string | undefined>(room?.image);
   const [imageIsDeleting, setImageIsDeleting] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // const toast = useToast();
 
-  const form = useForm<RoomAddSchemaType>({
+  const form2 = useForm<RoomAddSchemaType>({
     resolver: zodResolver(RoomAddSchema),
     defaultValues: room || {
       title: "",
@@ -68,11 +69,13 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
     },
   });
 
-  const onSubmit = async (values: RoomAddSchemaType) => {
+  const onSubmit2 = async (values: RoomAddSchemaType) => {
+    console.log("values", values);
     if (hotel && room) {
       //update
+      setIsLoading(true);
       await axios
-        .patch(`/api/room/${hotel.id}`, values)
+        .patch(`/api/room/${room.id}`, values)
         .then((res) => {
           toast({
             variant: "success",
@@ -81,6 +84,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
           });
           router.refresh();
           handleDialogOpen();
+          setIsLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -89,8 +93,11 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
             title: "Error",
             description: "Something went wrong",
           });
+          setIsLoading(false);
         });
     } else {
+      setIsLoading(true);
+      console.log("TEST ROOM");
       await axios
         .post("/api/room", { ...values, hotelId: hotel?.id })
         .then((res) => {
@@ -100,6 +107,8 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
             description: "🎉 Room Created",
           });
           router.refresh();
+          handleDialogOpen();
+          setIsLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -108,19 +117,20 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
             title: "Error",
             description: "Something went wrong",
           });
+          setIsLoading(false);
         });
     }
   };
 
   useEffect(() => {
     if (typeof image === "string") {
-      form.setValue("image", image, {
+      form2.setValue("image", image, {
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true,
       });
     }
-  }, [ image]);
+  }, [image]);
 
   const handleImageDelete = async (image: string) => {
     setImageIsDeleting(true);
@@ -152,10 +162,10 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
   };
   return (
     <div className="max-h-[75vh] overflow-y-auto scrollbar-hide px-2">
-      <Form {...form}>
+      <Form {...form2}>
         <form className="space-y-6">
           <FormField
-            control={form.control}
+            control={form2.control}
             name="title"
             render={({ field }) => (
               <FormItem>
@@ -170,7 +180,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
             )}
           />
           <FormField
-            control={form.control}
+            control={form2.control}
             name="description"
             render={({ field }) => (
               <FormItem>
@@ -193,49 +203,49 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
               <CheckboxGroup
                 label="24 hours Room Service"
                 name="roomService"
-                control={form.control}
+                control={form2.control}
               />
               <CheckboxGroup
                 label="Free Wifi"
                 name="freeWifi"
-                control={form.control}
+                control={form2.control}
               />
-              <CheckboxGroup label="TV" name="tv" control={form.control} />
+              <CheckboxGroup label="TV" name="tv" control={form2.control} />
               <CheckboxGroup
                 label="Air Condition"
                 name="airCondition"
-                control={form.control}
+                control={form2.control}
               />
               <CheckboxGroup
                 label="Heating"
                 name="heating"
-                control={form.control}
+                control={form2.control}
               />
 
               <CheckboxGroup
                 label="Ocean View"
                 name="oceanView"
-                control={form.control}
+                control={form2.control}
               />
               <CheckboxGroup
                 label="Mountain View"
                 name="mountainView"
-                control={form.control}
+                control={form2.control}
               />
               <CheckboxGroup
                 label="Forest View"
                 name="forestView"
-                control={form.control}
+                control={form2.control}
               />
               <CheckboxGroup
                 label="Sound Proof"
                 name="soundProof"
-                control={form.control}
+                control={form2.control}
               />
             </div>
           </div>
           <FormField
-            control={form.control}
+            control={form2.control}
             name="image"
             render={({ field }) => (
               <FormItem className="flex flex-col space-y-3">
@@ -297,7 +307,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
           <div className="flex flex-row gap-6">
             <div className="flex-1 flex flex-col gap-6">
               <FormField
-                control={form.control}
+                control={form2.control}
                 name="roomPrice"
                 render={({ field }) => (
                   <FormItem>
@@ -319,7 +329,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
               />
 
               <FormField
-                control={form.control}
+                control={form2.control}
                 name="bedCount"
                 render={({ field }) => (
                   <FormItem>
@@ -341,7 +351,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
                 )}
               />
               <FormField
-                control={form.control}
+                control={form2.control}
                 name="guestCount"
                 render={({ field }) => (
                   <FormItem>
@@ -363,7 +373,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
                 )}
               />
               <FormField
-                control={form.control}
+                control={form2.control}
                 name="bathroomCount"
                 render={({ field }) => (
                   <FormItem>
@@ -387,7 +397,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
             </div>
             <div className="flex-1 flex flex-col gap-6">
               <FormField
-                control={form.control}
+                control={form2.control}
                 name="breakFastPrice"
                 render={({ field }) => (
                   <FormItem>
@@ -404,7 +414,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
               />
 
               <FormField
-                control={form.control}
+                control={form2.control}
                 name="kingBed"
                 render={({ field }) => (
                   <FormItem>
@@ -426,7 +436,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
                 )}
               />
               <FormField
-                control={form.control}
+                control={form2.control}
                 name="queenBed"
                 render={({ field }) => (
                   <FormItem>
@@ -447,59 +457,41 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="bathroomCount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bath Room Count *</FormLabel>
-                    <FormDescription>
-                      How many bathroom available in this Room?
-                    </FormDescription>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min={0}
-                        max={10}
-                        placeholder="1"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
           </div>
           <div className="flex justify-between gap-5 flex-wrap">
             {room ? (
               <>
-                <Button2 isLoading={form.formState.isSubmitting} type="submit">
+                <Button2 isLoading={isLoading} type="button">
                   <Edit className="w-5 h-5 mr-3" /> Update{" "}
                 </Button2>
                 {/*  */}
-                <Button2>
+                {/* <Button2>
                   <EyeIcon className="w-5 h-5 mr-3" /> View{" "}
-                </Button2>
+                </Button2> */}
                 {/*  */}
 
                 {/*  */}
-                <Button2
+                {/* <Button2
                   variant="destructive"
                   // isLoading={hotelIsDeleting}
                   // onClick={() => handleDeleteButton(hotel)}
                 >
                   <Trash2 className="w-5 h-5 mr-3" /> Delete{" "}
-                </Button2>
+                </Button2> */}
               </>
             ) : (
               <>
                 <Button2
+                  onClick={() => {
+                    form2.handleSubmit(onSubmit2);
+                    console.log("test");
+                  }}
                   variant="outline"
-                  isLoading={form.formState.isSubmitting}
+                  isLoading={isLoading}
                   type="submit"
                 >
-                  <Edit3 className="w-5 h-5 mr-3" /> Submit{" "}
+                  <Edit className="w-3 h-3 mr-3" /> Submit111{" "}
                 </Button2>
               </>
             )}

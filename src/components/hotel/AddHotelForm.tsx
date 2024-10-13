@@ -133,6 +133,8 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
   }, [form.watch("country"), form.watch("state")]);
 
   const onSubmit = async (values: HotelAddSchemaType) => {
+    console.log("values", values);
+
     if (hotel) {
       //update
       await axios
@@ -541,11 +543,11 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
 
               <>
                 {hotel && !hotel.rooms?.length && (
-                  <Alert className="bg-indigo-500 text-white ">
+                  <Alert className="bg-indigo-500  text-white ">
                     <TerminalIcon className="w-4 h-4 stroke-white" />
                     <AlertTitle>One Last Step</AlertTitle>
                     <AlertDescription>
-                      Your Hotle Created Succsesfully ✨
+                      Your Hotel Created Successfully ✨
                       <div className="">
                         Please add some room to complete your hotel setup
                       </div>
