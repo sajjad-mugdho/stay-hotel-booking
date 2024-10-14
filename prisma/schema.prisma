@@ -40,27 +40,29 @@ model Hotel {
 }
 
 model Room {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String
   title          String
   description    String
-  bedCount       Int    @default(0)
-  bedRoomCount   Int    @default(0)
-  guestCount     Int    @default(0)
-  kingBed        Int    @default(0)
-  queenBed       Int    @default(0)
+  bedCount       String @default("0")
+  bedRoomCount   String @default("0")
+  guestCount     String @default("0")
+  kingBed        String @default("0")
+  queenBed       String @default("0")
   image          String
-  roomPrice      Float
-  breakFastPrice Float
+  roomPrice      String @default("0")
+  breakFastPrice String @default("0")
 
-  roomService  Boolean @default(false)
-  tv           Boolean @default(false)
-  airCondition Boolean @default(false)
-  heating      Boolean @default(false)
-  oceanView    Boolean @default(false)
-  mountainView Boolean @default(false)
-  forestView   Boolean @default(false)
-  soundProof   Boolean @default(false)
+  freeWifi     Boolean? @default(false)
+  roomService  Boolean? @default(false)
+  tv           Boolean? @default(false)
+  airCondition Boolean? @default(false)
+  heating      Boolean? @default(false)
+  oceanView    Boolean? @default(false)
+  mountainView Boolean? @default(false)
+  forestView   Boolean? @default(false)
+  soundProof   Boolean? @default(false)
+  balcony      Boolean? @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

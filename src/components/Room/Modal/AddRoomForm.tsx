@@ -20,7 +20,7 @@ import { RoomAddSchema, RoomAddSchemaType } from "@/schema/addRoomSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Hotel, Room } from "@prisma/client";
 import axios from "axios";
-import { Edit, Edit3, EyeIcon, Loader2, Trash2, XCircle } from "lucide-react";
+import { Edit, Loader2, XCircle } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -44,83 +44,80 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
 
   const form2 = useForm<RoomAddSchemaType>({
     resolver: zodResolver(RoomAddSchema),
-    defaultValues: room || {
+    defaultValues: {
       title: "",
       description: "",
-      bedCount: 0,
-      bedRoomCount: 0,
-      guestCount: 0,
-      bathroomCount: 0,
-      kingBed: 0,
-      queenBed: 0,
-      image: "",
-      roomPrice: 0,
-      breakFastPrice: 0,
-      roomService: false,
-      tv: false,
-      freeWifi: false,
-      airCondition: false,
-      balcony: false,
-      heating: false,
-      oceanView: false,
-      mountainView: false,
-      forestView: false,
-      soundProof: false,
+      bedCount: "",
+      guestCount: "",
+      kingBed: "",
+      queenBed: "",
+      roomPrice: "",
+      breakFastPrice: "",
+      roomService: false!,
+      tv: false!,
+      freeWifi: false!,
+      airCondition: false!,
+      heating: false!,
+      balcony: false!,
+      oceanView: false!,
+      mountainView: false!,
+      forestView: false!,
+      soundProof: false!,
     },
   });
 
-  const onSubmit2 = async (values: RoomAddSchemaType) => {
-    console.log("values", values);
-    if (hotel && room) {
-      //update
-      setIsLoading(true);
-      await axios
-        .patch(`/api/room/${room.id}`, values)
-        .then((res) => {
-          toast({
-            variant: "success",
-            title: "Success",
-            description: "🎉 Room Edited Successfully",
-          });
-          router.refresh();
-          handleDialogOpen();
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Something went wrong",
-          });
-          setIsLoading(false);
-        });
-    } else {
-      setIsLoading(true);
-      console.log("TEST ROOM");
-      await axios
-        .post("/api/room", { ...values, hotelId: hotel?.id })
-        .then((res) => {
-          toast({
-            variant: "success",
-            title: "Success",
-            description: "🎉 Room Created",
-          });
-          router.refresh();
-          handleDialogOpen();
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Something went wrong",
-          });
-          setIsLoading(false);
-        });
-    }
-  };
+  // const onSubmit2 = (values: RoomAddSchemaType) => {
+  //   console.log("values", values);
+  //   if (hotel && room) {
+  //     //update
+  //     setIsLoading(true);
+  //     axios
+  //       .patch(`/api/room/${room.id}`, values)
+  //       .then((res) => {
+  //         toast({
+  //           variant: "success",
+  //           title: "Success",
+  //           description: "🎉 Room Edited Successfully",
+  //         });
+  //         router.refresh();
+  //         handleDialogOpen();
+  //         setIsLoading(false);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         toast({
+  //           variant: "destructive",
+  //           title: "Error",
+  //           description: "Something went wrong",
+  //         });
+  //         setIsLoading(false);
+  //       });
+  //   } else {
+  //     setIsLoading(true);
+  //     console.log("TEST ROOM");
+  //     axios
+  //       .post("/api/room", { ...values, hotelId: hotel?.id })
+  //       .then((res) => {
+  //         toast({
+  //           variant: "success",
+  //           title: "Success",
+  //           description: "🎉 Room Created",
+  //         });
+  //         router.refresh();
+  //         handleDialogOpen();
+  //         setIsLoading(false);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         toast({
+  //           variant: "destructive",
+  //           title: "Error",
+  //           description: "Something went wrong",
+  //         });
+  //         setIsLoading(false);
+  //       });
+  //   }
+  // };
 
   useEffect(() => {
     if (typeof image === "string") {
@@ -159,6 +156,61 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
       .finally(() => {
         setImageIsDeleting(false);
       });
+  };
+
+  const handleAddRoom = async () => {
+    const formData = form2.getValues();
+    console.log("Add Room", formData);
+
+    if (hotel && room) {
+      //update
+      setIsLoading(true);
+      axios
+        .patch(`/api/room/${room.id}`, formData)
+        .then((res) => {
+          toast({
+            variant: "success",
+            title: "Success",
+            description: "🎉 Room Edited Successfully",
+          });
+          router.refresh();
+          handleDialogOpen();
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Something went wrong",
+          });
+          setIsLoading(false);
+        });
+    } else {
+      setIsLoading(true);
+      console.log("TEST ROOM");
+      axios
+        .post("/api/room", { ...formData, hotelId: hotel?.id })
+        .then((res) => {
+          toast({
+            variant: "success",
+            title: "Success",
+            description: "🎉 Room Created",
+          });
+          router.refresh();
+          handleDialogOpen();
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Something went wrong",
+          });
+          setIsLoading(false);
+        });
+    }
   };
   return (
     <div className="max-h-[75vh] overflow-y-auto scrollbar-hide px-2">
@@ -333,7 +385,7 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
                 name="bedCount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Room Price In USD *</FormLabel>
+                    <FormLabel>Bed Count *</FormLabel>
                     <FormDescription>
                       How many beds are available for this room?
                     </FormDescription>
@@ -358,28 +410,6 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
                     <FormLabel>Guest Count *</FormLabel>
                     <FormDescription>
                       How many guest are allow for this room?
-                    </FormDescription>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min={0}
-                        max={10}
-                        placeholder="1"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form2.control}
-                name="bathroomCount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bath Room Count *</FormLabel>
-                    <FormDescription>
-                      How many bathroom available in this Room?
                     </FormDescription>
                     <FormControl>
                       <Input
@@ -462,7 +492,11 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
           <div className="flex justify-between gap-5 flex-wrap">
             {room ? (
               <>
-                <Button2 isLoading={isLoading} type="button">
+                <Button2
+                  onClick={() => handleAddRoom()}
+                  isLoading={isLoading}
+                  type="button"
+                >
                   <Edit className="w-5 h-5 mr-3" /> Update{" "}
                 </Button2>
                 {/*  */}
@@ -484,12 +518,13 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
               <>
                 <Button2
                   onClick={() => {
-                    form2.handleSubmit(onSubmit2);
+                    // form2.handleSubmit(onSubmit2);
                     console.log("test");
+                    handleAddRoom();
                   }}
                   variant="outline"
                   isLoading={isLoading}
-                  type="submit"
+                  type="button"
                 >
                   <Edit className="w-3 h-3 mr-3" /> Submit111{" "}
                 </Button2>

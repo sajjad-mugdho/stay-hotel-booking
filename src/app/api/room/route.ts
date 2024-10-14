@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
     const { userId } = auth();
 
-    console.log(body);
+    const { hotelId, ...roomData } = body;
 
     if (!userId) {
       return new NextResponse("Unauthorize", { status: 401 });
@@ -16,8 +16,13 @@ export async function POST(req: Request) {
 
     const room = await prismaDB.room.create({
       data: {
-        ...body,
+        ...roomData,
         userId,
+        Hotel: {
+          connect: {
+            id: hotelId,
+          },
+        },
       },
     });
 
@@ -26,7 +31,7 @@ export async function POST(req: Request) {
     return NextResponse.json(room);
   } catch (error) {
     console.log("Error api/Room POST", error);
-    return new NextResponse("something went wrong while creation user", {
+    return new NextResponse("something went wrong while creation Room", {
       status: 404,
     });
   }
