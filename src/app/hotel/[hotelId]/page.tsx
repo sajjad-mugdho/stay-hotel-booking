@@ -17,11 +17,7 @@ const page = async ({ params }: HotelPageProps) => {
 
   const hotel = await getHotelById(params.hotelId);
 
-  if (!hotel || hotel.userId !== userId) {
-    return <div>Access denied...</div>;
-  }
-
-  console.log(hotel);
+  console.log("hotel", hotel);
 
   return (
     <div>

@@ -7,7 +7,7 @@ export const getHotelById = async (hotelId: string) => {
         id: hotelId,
       },
       include: {
-        Rooms: true,
+        rooms: true,
       },
     });
 

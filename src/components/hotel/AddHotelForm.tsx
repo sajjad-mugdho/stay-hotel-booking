@@ -55,6 +55,8 @@ import { useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import AddRoom from "../Room/Modal/AddRoomForm";
 import CheckboxGroup from "./SelectItems";
+import RoomCard from "../Room/Modal/RoomCard";
+import { Separator } from "../ui/separator";
 
 export type HotelWithRooms = Hotel & {
   rooms: Room[];
@@ -205,7 +207,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
         setImageIsDeleting(false);
       });
   };
-
+  console.log(hotel, "sajjad");
   const handleDeleteButton = async (hotel: HotelWithRooms) => {
     setHotelIsDeleting(true);
     const imageKey = hotel.image.substring(hotel.image.lastIndexOf("/") + 1);
@@ -614,6 +616,12 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                   </>
                 )}
               </div>
+              {hotel && !!hotel?.rooms?.length && (
+                <div>
+                  <Separator />
+                  <RoomCard />
+                </div>
+              )}
             </div>
           </div>
         </form>

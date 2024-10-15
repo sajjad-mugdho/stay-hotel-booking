@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       data: {
         ...roomData,
         userId,
-        Hotel: {
+        hotel: {
           connect: {
             id: hotelId,
           },

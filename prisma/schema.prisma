@@ -33,8 +33,8 @@ model Hotel {
   coffeeShop          Boolean   @default(false)
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
-  Rooms               Room[]
-  Bookings            Booking[]
+  rooms               Room[]
+  bookings            Booking[]
 
   @@map("hotels")
 }
@@ -67,8 +67,8 @@ model Room {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Bookings Booking[]
-  Hotel    Hotel?    @relation(fields: [hotelId], references: [id])
+  bookings Booking[]
+  hotel    Hotel?    @relation(fields: [hotelId], references: [id])
   hotelId  String?   @db.ObjectId
 
   @@index([hotelId], name: "hotelId")
@@ -94,7 +94,7 @@ model Booking {
   updatedAt DateTime @updatedAt
   Hotel     Hotel?   @relation(fields: [hotelId], references: [id])
   hotelId   String?  @db.ObjectId
-  Room      Room?    @relation(fields: [roomId], references: [id])
+  room      Room?    @relation(fields: [roomId], references: [id])
   roomId    String?  @db.ObjectId
 
   @@map("bookings")
