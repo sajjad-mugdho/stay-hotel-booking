@@ -17,16 +17,18 @@ const page = async ({ params }: HotelPageProps) => {
 
   const hotel = await getHotelById(params.hotelId);
 
-  // if (!hotel || hotel.userId !== userId) {
-  //   return <div>Access denied...</div>;
-
-  // }
+  if (!hotel || hotel.userId !== userId) {
+    return <div>Access denied...</div>;
+  }
 
   console.log(hotel);
 
   return (
     <div>
-      <AddHotelForm hotel={hotel} />
+      <AddHotelForm
+        // @ts-ignore
+        hotel={hotel}
+      />
     </div>
   );
 };
