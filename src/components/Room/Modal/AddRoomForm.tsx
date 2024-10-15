@@ -44,7 +44,8 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
 
   const form2 = useForm<RoomAddSchemaType>({
     resolver: zodResolver(RoomAddSchema),
-    defaultValues: {
+    // @ts-ignore
+    defaultValues: room! || {
       title: "",
       description: "",
       bedCount: "",
@@ -53,16 +54,16 @@ const AddRoom = ({ hotel, room, handleDialogOpen }: RoomProps) => {
       queenBed: "",
       roomPrice: "",
       breakFastPrice: "",
-      roomService: false!,
-      tv: false!,
-      freeWifi: false!,
-      airCondition: false!,
-      heating: false!,
-      balcony: false!,
-      oceanView: false!,
-      mountainView: false!,
-      forestView: false!,
-      soundProof: false!,
+      roomService: false,
+      tv: false,
+      freeWifi: false,
+      airCondition: false,
+      heating: false,
+      balcony: false,
+      oceanView: false,
+      mountainView: false,
+      forestView: false,
+      soundProof: false,
     },
   });
 

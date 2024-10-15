@@ -616,11 +616,17 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
                   </>
                 )}
               </div>
+              <Separator />
               {hotel && !!hotel?.rooms?.length && (
-                <div>
-                  <Separator />
-                  <RoomCard />
-                </div>
+                <>
+                  <h3 className="text-lg font-semibold my-4">Hotel Rooms</h3>
+
+                  <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6">
+                    {hotel?.rooms.map((room) => (
+                      <RoomCard key={room?.id} hotel={hotel} room={room} />
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </div>

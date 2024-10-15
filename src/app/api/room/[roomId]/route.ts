@@ -17,13 +17,13 @@ export async function PATCH(
     if (!params.roomId) {
       return new NextResponse("Room not found", { status: 404 });
     }
-
+    const { id, ...updateData } = body;
     const room = await prismaDB.room.update({
       where: {
         id: params.roomId,
       },
       data: {
-        ...body,
+        ...updateData,
       },
     });
 
