@@ -4,7 +4,19 @@ import { HotelWithRooms } from "./AddHotelForm";
 import useLocation from "@/hooks/useLocation";
 import Image from "next/image";
 import AminityItem from "../ui/AminityItem";
-import { Dumbbell, MapPin, Waves } from "lucide-react";
+import {
+  Car,
+  Clapperboard,
+  Coffee,
+  Dumbbell,
+  MapPin,
+  Utensils,
+  Waves,
+  Wine,
+} from "lucide-react";
+import { FaSpa, FaSwimmer } from "react-icons/fa";
+import { MdDryCleaning } from "react-icons/md";
+import RoomCard from "../Room/Modal/RoomCard";
 
 type Props = {
   hotel: HotelWithRooms;
@@ -43,7 +55,7 @@ const HotelDetailsClient = ({ hotel }: Props) => {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 content-start text-sm">
           {hotel.swimmingPool && (
             <AminityItem>
-              <Waves className="size-4" />
+              <FaSwimmer size={18} />
               Pool
             </AminityItem>
           )}
@@ -55,11 +67,47 @@ const HotelDetailsClient = ({ hotel }: Props) => {
           )}
           {hotel.spa && (
             <AminityItem>
-              <Waves className="size-4" />
+              <FaSpa className="size-4" />
+              Spa
+            </AminityItem>
+          )}
+          {hotel.bar && (
+            <AminityItem>
+              <Wine className="size-4" />
+              Bar
+            </AminityItem>
+          )}
+          {hotel.laundry && (
+            <AminityItem>
+              <MdDryCleaning className="size-4" />
+              Laundry
+            </AminityItem>
+          )}
+          {hotel.restaurant && (
+            <AminityItem>
+              <Utensils className="size-4" />
+              Restaurant
+            </AminityItem>
+          )}
+          {hotel.freeParking && (
+            <AminityItem>
+              <Car className="size-4" />
+              Free Parking
+            </AminityItem>
+          )}
+          {hotel.movieNight && (
+            <AminityItem>
+              <Clapperboard className="size-4" />
+              Movie Night
+            </AminityItem>
+          )}
+          {hotel.coffeeShop && (
+            <AminityItem>
+              <Coffee className="size-4" />
               Pool
             </AminityItem>
           )}
-          {hotel.swimmingPool && (
+          {/* {hotel.swimmingPool && (
             <AminityItem>
               <Waves className="size-4" />
               Pool
@@ -70,44 +118,20 @@ const HotelDetailsClient = ({ hotel }: Props) => {
               <Waves className="size-4" />
               Pool
             </AminityItem>
-          )}
-          {hotel.swimmingPool && (
-            <AminityItem>
-              <Waves className="size-4" />
-              Pool
-            </AminityItem>
-          )}
-          {hotel.swimmingPool && (
-            <AminityItem>
-              <Waves className="size-4" />
-              Pool
-            </AminityItem>
-          )}
-          {hotel.swimmingPool && (
-            <AminityItem>
-              <Waves className="size-4" />
-              Pool
-            </AminityItem>
-          )}
-          {hotel.swimmingPool && (
-            <AminityItem>
-              <Waves className="size-4" />
-              Pool
-            </AminityItem>
-          )}
-          {hotel.swimmingPool && (
-            <AminityItem>
-              <Waves className="size-4" />
-              Pool
-            </AminityItem>
-          )}
-          {hotel.swimmingPool && (
-            <AminityItem>
-              <Waves className="size-4" />
-              Pool
-            </AminityItem>
-          )}
+          )} */}
         </div>
+      </div>
+      <div className="">
+        {!!hotel.rooms.length && (
+          <>
+            <h1 className="text-lg my-4">Hotel Rooms</h1>
+            <div className="grid grid-cols-3 md:grid-cols-2">
+              {hotel.rooms.map((room) => (
+                <RoomCard key={room.id} room={room} hotel={hotel} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
