@@ -40,11 +40,16 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddRoom from "./AddRoomForm";
 import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
 import { Toast } from "@/components/ui/toast";
+import { DatePickerWithRange } from "./DateRangePicker";
+import { DateRange } from "react-day-picker";
+import { addDays, differenceInCalendarDays } from "date-fns";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface RoomCardProps {
   hotel?: Hotel & {
@@ -62,6 +67,29 @@ const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<DateRange | undefined>();
+  const [totalPrice, setTotalPrice] = useState(Number(room.roomPrice));
+  const [includeBreakFast, setIncludeBreakFast] = useState(false);
+  const [days, setDays] = useState(1);
+
+  useEffect(() => {
+    if (date && date.to && date.from) {
+      const dayCounts = differenceInCalendarDays(date.to, date.from);
+      setDays(dayCounts);
+
+      if (dayCounts && room.roomPrice) {
+        if (includeBreakFast && room.breakFastPrice) {
+          setTotalPrice(
+            (Number(room.roomPrice) + Number(room.breakFastPrice)) * dayCounts
+          );
+        } else {
+          setTotalPrice(Number(room.roomPrice) * dayCounts);
+        }
+      } else {
+        setTotalPrice(Number(room.roomPrice));
+      }
+    }
+  }, [date, includeBreakFast, room.breakFastPrice, room.roomPrice]);
 
   const handleDialogOpen = () => {
     setOpen((prev) => !prev);
@@ -213,7 +241,30 @@ const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
       </CardContent>
       <CardFooter>
         {isHotelDetailsPage ? (
-          <div className="">Hotel Details</div>
+          <div className="flex flex-col gap-6">
+            <div className="">
+              <div className="mb-2">Select the date or spending days.. </div>
+              <DatePickerWithRange date={date} setDate={setDate} />
+            </div>
+            {Number(room.breakFastPrice) > 0 && (
+              <div className="">
+                <div className="mb-2">
+                  Do you want to serve breakfast each day
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="breakfast"
+                    onCheckedChange={(value) => setIncludeBreakFast(!!value)}
+                  />
+                  <Label htmlFor="breakfast">Include Breakfast</Label>
+                </div>
+              </div>
+            )}
+            <div className="">
+              Total Price: <span>${totalPrice}</span> for{" "}
+              <span>{days} Days</span>
+            </div>
+          </div>
         ) : (
           <div className="flex w-full justify-between">
             <Button
