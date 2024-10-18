@@ -54,7 +54,7 @@ interface RoomCardProps {
   bookings?: Booking[];
 }
 
-const RoomCard = ({ room, hotel, bookings = [] }: RoomCardProps) => {
+const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
   const pathName = usePathname();
   const router = useRouter();
   const isHotelDetailsPage = pathName.includes("hotel-details");

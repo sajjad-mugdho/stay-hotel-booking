@@ -20,10 +20,10 @@ import RoomCard from "../Room/Modal/RoomCard";
 
 type Props = {
   hotel: HotelWithRooms;
-  bookings?: Booking;
+  bookings?: Booking[];
 };
 
-const HotelDetailsClient = ({ hotel }: Props) => {
+const HotelDetailsClient = ({ hotel, bookings }: Props) => {
   const { getCountryByCode, getStateByCode } = useLocation();
   const country = getCountryByCode(hotel.country);
   const state = getStateByCode(hotel.country, hotel.state);
@@ -125,9 +125,14 @@ const HotelDetailsClient = ({ hotel }: Props) => {
         {!!hotel.rooms.length && (
           <>
             <h1 className="text-lg my-4">Hotel Rooms</h1>
-            <div className="grid grid-cols-3 md:grid-cols-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {hotel.rooms.map((room) => (
-                <RoomCard key={room.id} room={room} hotel={hotel} />
+                <RoomCard
+                  key={room.id}
+                  room={room}
+                  hotel={hotel}
+                  bookings={bookings}
+                />
               ))}
             </div>
           </>
