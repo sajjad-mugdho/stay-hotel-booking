@@ -36,6 +36,7 @@ import {
   Users,
   UtensilsCrossed,
   VolumeXIcon,
+  Wand,
   Wifi,
 } from "lucide-react";
 import Image from "next/image";
@@ -50,6 +51,8 @@ import { DateRange } from "react-day-picker";
 import { addDays, differenceInCalendarDays } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@clerk/nextjs";
+import useBookRooms from "@/hooks/useBookRooms";
 
 interface RoomCardProps {
   hotel?: Hotel & {
@@ -60,11 +63,21 @@ interface RoomCardProps {
 }
 
 const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
+  const {
+    bookingRoomData,
+    setRoomData,
+    paymentIntentId,
+    setPaymentIntentId,
+    clientSecret,
+    setClientSecret,
+  } = useBookRooms();
   const pathName = usePathname();
   const router = useRouter();
+  const { userId } = useAuth();
   const isHotelDetailsPage = pathName.includes("hotel-details");
 
   const [isLoading, setIsLoading] = useState(false);
+
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<DateRange | undefined>();
@@ -117,6 +130,92 @@ const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
         variant: "destructive",
         title: "Error ",
         description: `Room has not been deleted ${err}`,
+      });
+    }
+  };
+
+  const handleBooking = async () => {
+    if (!userId) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You need to login to book a room",
+      });
+      return;
+    }
+
+    if (!hotel?.userId) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong, please try again later",
+      });
+      return;
+    }
+
+    if (date?.from && date.to) {
+      try {
+        setIsLoading(true);
+        const bookingRoomData = {
+          room,
+          totalPrice,
+          includeBreakFast,
+          startDate: date.from,
+          endDate: date.to,
+        };
+        setRoomData(bookingRoomData);
+
+        const response = await fetch("/api/create-payment-intent", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            booking: {
+              hotelId: hotel?.id,
+              hotelOwnerId: hotel?.userId,
+              roomId: room?.id,
+              totalPrice,
+              includeBreakFast,
+              startDate: date.from,
+              endDate: date.to,
+            },
+            payment_intent_id: paymentIntentId,
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          toast({
+            variant: "success",
+            title: "Success",
+            description: "Room has been booked",
+          });
+          setPaymentIntentId(result.paymentIntent.id);
+          setClientSecret(result.paymentIntent.client_secret);
+
+          router.push("/book-room"); // Redirect to the payment page
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Failed to book room. Please try again.",
+          });
+        }
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: `Booking error: ${error.message}`,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please select a date range",
       });
     }
   };
@@ -264,6 +363,9 @@ const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
               Total Price: <span>${totalPrice}</span> for{" "}
               <span>{days} Days</span>
             </div>
+            <Button2 onClick={() => handleBooking()} isLoading={isLoading}>
+              <Wand className="size-4 mx-2" /> Book Now
+            </Button2>
           </div>
         ) : (
           <div className="flex w-full justify-between">

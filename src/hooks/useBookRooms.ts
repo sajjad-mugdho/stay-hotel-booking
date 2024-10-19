@@ -4,10 +4,10 @@ import { persist } from "zustand/middleware";
 
 interface IBookingRoomStore {
   bookingRoomData: BookingRoomTypes | null;
-  paymentIntent: string | null;
+  paymentIntentId: string | null;
   clientSecret: string | null;
   setRoomData: (data: BookingRoomTypes) => void;
-  setPaymentIntent: (paymentIntent: string) => void;
+  setPaymentIntentId: (paymentIntentId: string) => void;
   setClientSecret: (clientSecret: string) => void;
   reset: () => void;
 }
@@ -15,23 +15,26 @@ interface IBookingRoomStore {
 type BookingRoomTypes = {
   room: Room;
   totalPrice: number;
-  BreakfastIncluded: boolean;
-  checkIn: string;
-  checkOut: string;
-  adults: number;
+  BreakfastIncluded?: boolean;
+  startDate: Date;
+  endDate: Date;
 };
 
 const useBookRooms = create<IBookingRoomStore>()(
   persist(
     (set) => ({
       bookingRoomData: null,
-      paymentIntent: null,
+      paymentIntentId: null,
       clientSecret: null,
       setRoomData: (data) => set({ bookingRoomData: data }),
-      setPaymentIntent: (paymentIntent) => set({ paymentIntent }),
+      setPaymentIntentId: (paymentIntentId) => set({ paymentIntentId }),
       setClientSecret: (clientSecret) => set({ clientSecret }),
       reset: () =>
-        set({ bookingRoomData: null, paymentIntent: null, clientSecret: null }),
+        set({
+          bookingRoomData: null,
+          paymentIntentId: null,
+          clientSecret: null,
+        }),
     }),
     {
       name: "BookRoom",
