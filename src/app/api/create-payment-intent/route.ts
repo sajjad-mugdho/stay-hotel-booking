@@ -28,8 +28,6 @@ export async function POST(req: Request) {
       paymentIntentId: payment_intent_id,
     };
 
-    console.log("Booking", bookingData);
-
     let foundBooking;
 
     if (payment_intent_id) {
@@ -52,8 +50,6 @@ export async function POST(req: Request) {
         currency: bookingData.currency,
         automatic_payment_methods: { enabled: true },
       });
-
-      console.log(paymentIntent);
 
       bookingData.paymentIntentId = paymentIntent.id;
 
