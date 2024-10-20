@@ -16,8 +16,6 @@ const Navbar = (props: Props) => {
   const router = useRouter();
   const { userId } = useAuth();
 
-  //   const userId = "1010001"
-
   return (
     <div className="sticky  top-0 border border-b-primary/10 bg-secondary">
       <Container>
