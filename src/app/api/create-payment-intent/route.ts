@@ -41,6 +41,31 @@ export async function POST(req: Request) {
 
     if (foundBooking && payment_intent_id) {
       // Update the booking here
+      const current_intent = await stripe.paymentIntents.retrieve(
+        payment_intent_id
+      );
+      if (current_intent) {
+        const update_intent = await stripe.paymentIntents.update(
+          payment_intent_id,
+          {
+            amount: booking.totalPrice * 100,
+          }
+        );
+
+        const res = await prismaDB.booking.update({
+          where: { paymentIntentId: payment_intent_id, userId: user.id },
+          data: bookingData,
+        });
+
+        if (!res) {
+          return NextResponse.error();
+        }
+
+        return NextResponse.json(
+          { message: "Booking updated", paymentIntent: update_intent },
+          { status: 200 }
+        );
+      }
     } else {
       // Create new booking
 
