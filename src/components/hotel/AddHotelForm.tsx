@@ -135,8 +135,6 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
   }, [form.watch("country"), form.watch("state")]);
 
   const onSubmit = async (values: HotelAddSchemaType) => {
-    console.log("values", values);
-
     if (hotel) {
       //update
       await axios
