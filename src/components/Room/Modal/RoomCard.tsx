@@ -41,14 +41,14 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AddRoom from "./AddRoomForm";
 import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
 import { Toast } from "@/components/ui/toast";
 import { DatePickerWithRange } from "./DateRangePicker";
 import { DateRange } from "react-day-picker";
-import { addDays, differenceInCalendarDays } from "date-fns";
+import { addDays, differenceInCalendarDays, eachDayOfInterval } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@clerk/nextjs";
@@ -103,6 +103,23 @@ const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
       }
     }
   }, [date, includeBreakFast, room.breakFastPrice, room.roomPrice]);
+
+  const disableDates = useMemo(() => {
+    let dates: Date[] = [];
+
+    const roomBookings = bookings?.filter(
+      (booking) => booking.roomId === room.id
+    );
+
+    roomBookings?.forEach((booking) => {
+      const range = eachDayOfInterval({
+        start: new Date(booking.startDate),
+        end: new Date(booking.endDate),
+      });
+      dates = [...dates, ...range];
+    });
+    return dates;
+  }, [bookings]);
 
   const handleDialogOpen = () => {
     setOpen((prev) => !prev);
@@ -343,7 +360,11 @@ const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
           <div className="flex flex-col gap-6">
             <div className="">
               <div className="mb-2">Select the date or spending days.. </div>
-              <DatePickerWithRange date={date} setDate={setDate} />
+              <DatePickerWithRange
+                date={date}
+                setDate={setDate}
+                disabledDates={disableDates}
+              />
             </div>
             {Number(room.breakFastPrice) > 0 && (
               <div className="">

@@ -78,7 +78,7 @@ model Room {
 model Booking {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
   username     String
-  userId       String @unique // Remove `@db.ObjectId`
+  userId       String
   hotelOwnerId String
   email        String
 
