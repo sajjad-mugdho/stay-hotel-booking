@@ -75,6 +75,7 @@ const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
   const router = useRouter();
   const { userId } = useAuth();
   const isHotelDetailsPage = pathName.includes("hotel-details");
+  const isBookRoomPage = pathName.includes("book-room");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -355,82 +356,88 @@ const RoomCard = ({ room, hotel, bookings }: RoomCardProps) => {
         <Separator />
         <div className=""></div>
       </CardContent>
-      <CardFooter>
-        {isHotelDetailsPage ? (
-          <div className="flex flex-col gap-6">
-            <div className="">
-              <div className="mb-2">Select the date or spending days.. </div>
-              <DatePickerWithRange
-                date={date}
-                setDate={setDate}
-                disabledDates={disableDates}
-              />
-            </div>
-            {Number(room.breakFastPrice) > 0 && (
+      {!isBookRoomPage && (
+        <CardFooter>
+          {isHotelDetailsPage ? (
+            <div className="flex flex-col gap-6">
               <div className="">
-                <div className="mb-2">
-                  Do you want to serve breakfast each day
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="breakfast"
-                    onCheckedChange={(value) => setIncludeBreakFast(!!value)}
-                  />
-                  <Label htmlFor="breakfast">Include Breakfast</Label>
-                </div>
+                <div className="mb-2">Select the date or spending days.. </div>
+                <DatePickerWithRange
+                  date={date}
+                  setDate={setDate}
+                  disabledDates={disableDates}
+                />
               </div>
-            )}
-            <div className="">
-              Total Price: <span>${totalPrice}</span> for{" "}
-              <span>{days} Days</span>
-            </div>
-            <Button2 onClick={() => handleBooking()} isLoading={isLoading}>
-              <Wand className="size-4 mx-2" /> Book Now
-            </Button2>
-          </div>
-        ) : (
-          <div className="flex w-full justify-between">
-            <Button
-              onClick={() => handleDeleteRoom(room)}
-              type="button"
-              variant="ghost"
-            >
-              {isLoadingDelete ? (
-                <>
-                  <Loader2 className="mr-2 w-4 h-4" /> deleting...
-                </>
-              ) : (
-                <>
-                  <Trash className="mr-2 w-4 h-4" /> Delete
-                </>
-              )}
-            </Button>
-
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger>
-                <Button type="button" variant="ghost" className=" text-white ">
-                  <PencilLineIcon className="w-5 h-5 mr-3" />
-                  Update Room
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-[900px] w-[90%]">
-                <DialogHeader className="px-2">
-                  <DialogTitle className="text-center">
-                    Update your room details
-                  </DialogTitle>
-                  <DialogDescription>
-                    <AddRoom
-                      hotel={hotel}
-                      room={room}
-                      handleDialogOpen={handleDialogOpen}
+              {Number(room.breakFastPrice) > 0 && (
+                <div className="">
+                  <div className="mb-2">
+                    Do you want to serve breakfast each day
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="breakfast"
+                      onCheckedChange={(value) => setIncludeBreakFast(!!value)}
                     />
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
-          </div>
-        )}
-      </CardFooter>
+                    <Label htmlFor="breakfast">Include Breakfast</Label>
+                  </div>
+                </div>
+              )}
+              <div className="">
+                Total Price: <span>${totalPrice}</span> for{" "}
+                <span>{days} Days</span>
+              </div>
+              <Button2 onClick={() => handleBooking()} isLoading={isLoading}>
+                <Wand className="size-4 mx-2" /> Book Now
+              </Button2>
+            </div>
+          ) : (
+            <div className="flex w-full justify-between">
+              <Button
+                onClick={() => handleDeleteRoom(room)}
+                type="button"
+                variant="ghost"
+              >
+                {isLoadingDelete ? (
+                  <>
+                    <Loader2 className="mr-2 w-4 h-4" /> deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash className="mr-2 w-4 h-4" /> Delete
+                  </>
+                )}
+              </Button>
+
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className=" text-white "
+                  >
+                    <PencilLineIcon className="w-5 h-5 mr-3" />
+                    Update Room
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-[900px] w-[90%]">
+                  <DialogHeader className="px-2">
+                    <DialogTitle className="text-center">
+                      Update your room details
+                    </DialogTitle>
+                    <DialogDescription>
+                      <AddRoom
+                        hotel={hotel}
+                        room={room}
+                        handleDialogOpen={handleDialogOpen}
+                      />
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
+        </CardFooter>
+      )}
     </Card>
   );
 };

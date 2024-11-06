@@ -5,7 +5,7 @@ type Props = {};
 
 const BookRoom = (props: Props) => {
   return (
-    <div>
+    <div className="p-8">
       <BookRoomClient />
     </div>
   );
