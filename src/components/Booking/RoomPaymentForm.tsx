@@ -11,6 +11,10 @@ import React, { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import moment from "moment";
 import { Button } from "../ui/button-2";
+import axios from "axios";
+import { toast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 type Props = {
   clientSecret: string;
@@ -21,9 +25,11 @@ const RoomPaymentForm = ({ clientSecret, handlePaymentSuccess }: Props) => {
   const { bookingRoomData, reset: resetBookRoom } = useBookRooms();
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
+
   const { startDate, endDate, BreakfastIncluded, totalPrice, room } =
     bookingRoomData || {};
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!stripe) return;
@@ -39,8 +45,39 @@ const RoomPaymentForm = ({ clientSecret, handlePaymentSuccess }: Props) => {
 
     // make payment
     try {
+      // Date overlaps
+
+      stripe
+        .confirmPayment({
+          elements,
+          redirect: "if_required",
+        })
+        .then((result) => {
+          if (!result.error) {
+            axios
+              .patch(`/api/booking/${result.paymentIntent.id}`)
+              .then((response) => {
+                toast({
+                  variant: "success",
+                  title: "Room Reserve Success",
+                  description: "Your payment was successful",
+                });
+                handlePaymentSuccess(true);
+                setIsLoading(false);
+                resetBookRoom();
+                router.refresh();
+              })
+              .catch((error) => {
+                console.error(error);
+                setIsLoading(false);
+              });
+          } else {
+            setIsLoading(false);
+          }
+        });
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
 
@@ -90,6 +127,13 @@ const RoomPaymentForm = ({ clientSecret, handlePaymentSuccess }: Props) => {
               <div className="">BreakFastPrice: ${room?.breakFastPrice}</div>
             )}
           </div>
+
+          {isLoading && (
+            <Alert>
+              <AlertTitle>Processing Payment,</AlertTitle>
+              <AlertDescription>please stay on this page</AlertDescription>
+            </Alert>
+          )}
 
           <Button
             type="submit"

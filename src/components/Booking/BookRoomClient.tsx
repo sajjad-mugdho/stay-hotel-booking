@@ -6,6 +6,8 @@ import RoomCard from "../Room/Modal/RoomCard";
 import { Elements } from "@stripe/react-stripe-js";
 import RoomPaymentForm from "./RoomPaymentForm";
 import { useTheme } from "next-themes";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -16,6 +18,7 @@ const stripePromise = loadStripe(
 const BookRoomClient = (props: Props) => {
   const { bookingRoomData, clientSecret } = useBookRooms();
   const { theme } = useTheme();
+  const router = useRouter();
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [pageLoaded, setPageLoaded] = useState(false);
 
@@ -30,6 +33,47 @@ const BookRoomClient = (props: Props) => {
   const handlePaymentSuccess = (value: boolean) => {
     setPaymentSuccess(value);
   };
+
+  if (!paymentSuccess && (!bookingRoomData || !clientSecret))
+    return (
+      <div className="flex items-center flex-col gap-4">
+        <div className="text-rose-500 text-lg">
+          Oops! This page could not be properly loaded...
+        </div>
+        <div className="flex gap-4 items-center">
+          <Button
+            variant="outline"
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            Go Home
+          </Button>
+          <Button
+            onClick={() => {
+              router.push("/my-booking");
+            }}
+          >
+            View My Booking
+          </Button>
+        </div>
+      </div>
+    );
+
+  if (paymentSuccess) {
+    return (
+      <div className="flex items-center flex-col gap-4">
+        <div className="text-teal-500 text-center">Payment Success</div>
+        <Button
+          onClick={() => {
+            router.push("/my-booking");
+          }}
+        >
+          View Booking
+        </Button>
+      </div>
+    );
+  }
   return (
     <div className="max-w-[700px] mx-auto">
       {bookingRoomData && clientSecret && (
