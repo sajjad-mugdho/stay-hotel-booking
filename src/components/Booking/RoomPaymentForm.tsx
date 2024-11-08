@@ -15,10 +15,49 @@ import axios from "axios";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Booking } from "@prisma/client";
+import { endOfDay, isWithinInterval, startOfDay } from "date-fns";
+import { TerminalIcon } from "lucide-react";
 
 type Props = {
   clientSecret: string;
   handlePaymentSuccess: (value: boolean) => void;
+};
+
+type DateRangeType = {
+  startDate: string;
+  endDate: string;
+};
+
+const hasOverlap = (
+  dateRange: DateRangeType[],
+  startDate: Date,
+  endDate: Date
+) => {
+  const targetInterval = {
+    start: startOfDay(new Date(startDate)),
+    end: endOfDay(new Date(endDate)),
+  };
+
+  for (const range of dateRange) {
+    const rangeStart = startOfDay(new Date(range.startDate));
+    const rangeEnd = endOfDay(new Date(range.endDate));
+
+    if (
+      isWithinInterval(targetInterval.start, {
+        start: rangeStart,
+        end: rangeEnd,
+      }) ||
+      isWithinInterval(targetInterval.end, {
+        start: rangeStart,
+        end: rangeEnd,
+      }) ||
+      (targetInterval.start < rangeStart && targetInterval.end > rangeEnd)
+    ) {
+      return true;
+    }
+    return false;
+  }
 };
 
 const RoomPaymentForm = ({ clientSecret, handlePaymentSuccess }: Props) => {
@@ -46,6 +85,31 @@ const RoomPaymentForm = ({ clientSecret, handlePaymentSuccess }: Props) => {
     // make payment
     try {
       // Date overlaps
+      const bookings = await axios.get(`/api/booking/${room?.id}`);
+      const roomBookingDates = bookings.data.map((booking: Booking) => {
+        return {
+          startDate: booking.startDate,
+          endDate: booking.endDate,
+        };
+      });
+
+      if (!startDate || !endDate) {
+        throw new Error("Start date and end date must be defined");
+      }
+
+      const overlapFound = hasOverlap(roomBookingDates, startDate, endDate);
+
+      if (overlapFound) {
+        setIsLoading(false);
+        toast({
+          variant: "destructive",
+          title: "Room Reserve Error",
+          description: "Room already booked for this date range",
+        });
+        return;
+      }
+
+      console.log(bookings);
 
       stripe
         .confirmPayment({
@@ -129,9 +193,15 @@ const RoomPaymentForm = ({ clientSecret, handlePaymentSuccess }: Props) => {
           </div>
 
           {isLoading && (
-            <Alert>
-              <AlertTitle>Processing Payment,</AlertTitle>
-              <AlertDescription>please stay on this page</AlertDescription>
+            <Alert className="bg-indigo-500  text-white ">
+              <TerminalIcon className="w-4 h-4 stroke-white" />
+              <AlertTitle>Payment Processing</AlertTitle>
+              <AlertDescription>
+                Please wait while we process your payment
+                <div className="">
+                  <div className="w-6 h-6 animate-spin"></div>
+                </div>
+              </AlertDescription>
             </Alert>
           )}
 

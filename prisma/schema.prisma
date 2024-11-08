@@ -76,27 +76,24 @@ model Room {
 }
 
 model Booking {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  username     String
-  userId       String
-  hotelOwnerId String
-  email        String
-
-  startDate DateTime
-  endDate   DateTime
-
-  breakFastIncluded Boolean @default(false)
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  username          String
+  userId            String
+  hotelOwnerId      String
+  email             String
+  startDate         DateTime
+  endDate           DateTime
+  breakFastIncluded Boolean  @default(false)
   currency          String
   totalPrice        Float
-  paymentStatus     Boolean @default(false)
-  paymentIntentId   String  @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Hotel     Hotel?   @relation(fields: [hotelId], references: [id])
-  hotelId   String?  @db.ObjectId
-  room      Room?    @relation(fields: [roomId], references: [id])
-  roomId    String?  @db.ObjectId
+  paymentStatus     Boolean  @default(false)
+  paymentIntentId   String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  Hotel             Hotel?   @relation(fields: [hotelId], references: [id])
+  hotelId           String?  @db.ObjectId
+  room              Room?    @relation(fields: [roomId], references: [id])
+  roomId            String?  @db.ObjectId
 
   @@map("bookings")
 }
