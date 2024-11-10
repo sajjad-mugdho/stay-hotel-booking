@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { HotelWithRooms } from "./AddHotelForm";
+
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -9,7 +9,12 @@ import { Dumbbell, MapPin, Waves } from "lucide-react";
 import useLocation from "@/hooks/useLocation";
 import { Button } from "../ui/button";
 
-const HotelCard = ({ hotel }: { hotel: HotelWithRooms }) => {
+import { Booking, Hotel, Room } from "@prisma/client";
+
+interface MyBookingClientProps {
+  booking: Booking & { room: Room } & { hotel: Hotel };
+}
+const MyBookingClient: React.FC<MyBookingClientProps> = ({ booking }) => {
   const pathname = usePathname();
   const router = useRouter();
   const isMyHotels = pathname.includes("my-hotels");
@@ -85,4 +90,4 @@ const HotelCard = ({ hotel }: { hotel: HotelWithRooms }) => {
   );
 };
 
-export default HotelCard;
+export default MyBookingClient;
