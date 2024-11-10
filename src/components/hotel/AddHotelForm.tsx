@@ -205,7 +205,7 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
         setImageIsDeleting(false);
       });
   };
-  console.log(hotel, "sajjad");
+
   const handleDeleteButton = async (hotel: HotelWithRooms) => {
     setHotelIsDeleting(true);
     const imageKey = hotel.image.substring(hotel.image.lastIndexOf("/") + 1);

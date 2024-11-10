@@ -14,8 +14,6 @@ interface HomeProps {
 export default async function Home({ searchParams }: HomeProps) {
   const hotels = await getHotels(searchParams);
 
-  console.log("hotels", hotels);
-
   if (!hotels) {
     return <>No hotels found...</>;
   }

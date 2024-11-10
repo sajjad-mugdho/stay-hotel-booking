@@ -17,14 +17,13 @@ const page = async ({ params }: HotelPageProps) => {
 
   const hotel = await getHotelById(params.hotelId);
 
-  console.log("hotel", hotel);
+  if (!hotel) {
+    return <div>Hotel not found</div>;
+  }
 
   return (
     <div>
-      <AddHotelForm
-        // @ts-ignore
-        hotel={hotel}
-      />
+      <AddHotelForm hotel={hotel} />
     </div>
   );
 };

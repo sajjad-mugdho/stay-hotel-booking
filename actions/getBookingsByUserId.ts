@@ -1,7 +1,7 @@
 import prismaDB from "@/lib/prisma";
 import { auth } from "@clerk/nextjs";
 
-export const getBookingsByHotelOwnersId = async () => {
+export const getBookingsByUserId = async () => {
   try {
     const { userId } = auth();
 

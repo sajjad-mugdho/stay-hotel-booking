@@ -26,8 +26,6 @@ export async function POST(req: Request) {
       },
     });
 
-    console.log(room);
-
     return NextResponse.json(room);
   } catch (error) {
     console.log("Error api/Room POST", error);
