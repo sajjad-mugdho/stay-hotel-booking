@@ -31,6 +31,25 @@ const MyBookings = async (props: Props) => {
           </div>
         </>
       )}
+
+      {!!bookingFromVisitor?.length && (
+        <>
+          <div className="">
+            <h2 className="text-xl font-semibold md:text-2xl mb-6 mt-2">
+              Here are bookings you are made
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {bookingIhaveMade.map((booking) => (
+                <MyBookingClient
+                  key={booking.id}
+                  booking={{ ...booking, hotel: booking.Hotel }}
+                />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -22,6 +22,7 @@ import {
   Heater,
   Home,
   Loader2,
+  MapPin,
   PencilLineIcon,
   Trash,
   Trees,
@@ -60,17 +61,18 @@ const MyBookingClient: React.FC<MyBookingClientProps> = ({ booking }) => {
     clientSecret,
     setClientSecret,
   } = useBookRooms();
-  const { userId } = useAuth();
-  const router = useRouter();
-
   const [isLoading, setIsLoading] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const { getCountryByCode, getStateByCode } = useLocation();
+  const { userId } = useAuth();
+  const router = useRouter();
 
   if (!room || !hotel) return <div className="">No Data Found</div>;
 
-  const country = getCountryByCode(hotel.country);
-  const state = getStateByCode(hotel.state, hotel.state);
+  const country = getCountryByCode(hotel.country!);
+  const state = getStateByCode(hotel.country!, hotel.state!);
+
+  if (!room || !hotel) return <div className="">No Data Found</div>;
 
   const startDate = moment(booking.startDate).format("MMM Do YY");
   const endDate = moment(booking.endDate).format("MMM Do YY");
@@ -161,6 +163,14 @@ const MyBookingClient: React.FC<MyBookingClientProps> = ({ booking }) => {
   return (
     <Card>
       <CardHeader>
+        <CardTitle>{hotel.title}</CardTitle>
+        <CardDescription>
+          {" "}
+          <AminityItem>
+            <MapPin className="size-4" />
+            {state?.name}, {hotel.city} {country?.name}
+          </AminityItem>
+        </CardDescription>
         <CardTitle>{room.title}</CardTitle>
         <CardDescription>{room.description}</CardDescription>
       </CardHeader>
@@ -274,8 +284,32 @@ const MyBookingClient: React.FC<MyBookingClientProps> = ({ booking }) => {
           )}
         </div>
         <Separator />
-        <div className=""></div>
+        <div className="flex flex-col gap-2">
+          <CardTitle>Booking Details</CardTitle>
+          <div className="text-primary/90">
+            <div className="">
+              Room booked by {booking.username} for {dayCounts} days -{" "}
+              {moment(booking.startDate).fromNow()}
+            </div>
+            <div className="">Check In: {startDate} at 5PM </div>
+            <div className="">Check Out: {endDate} at 5PM </div>
+            {booking.breakFastIncluded && (
+              <div className=""> Breakfast will be served </div>
+            )}
+            {booking.paymentStatus ? (
+              <div className="text-teal-500">
+                Paid: ${booking.totalPrice} -Room Reserved
+              </div>
+            ) : (
+              <div className="text-red-500">
+                <span className="">Not Paid: ${booking.totalPrice} </span> -
+                Room Not Reserved
+              </div>
+            )}
+          </div>
+        </div>
       </CardContent>
+      <CardFooter></CardFooter>
     </Card>
   );
 };
