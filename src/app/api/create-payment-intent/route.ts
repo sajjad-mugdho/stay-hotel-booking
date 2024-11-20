@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2024-09-30.acacia",
+  apiVersion: "2024-10-28.acacia",
 });
 
 export async function POST(req: Request) {
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { booking, payment_intent_id } = body;
 
-    console.log("Booking data:", body);
+    // console.log("Booking data:", body);
 
     const bookingData = {
       ...booking,
@@ -27,6 +27,8 @@ export async function POST(req: Request) {
       currency: "usd",
       paymentIntentId: payment_intent_id,
     };
+
+    console.log("Booking data:22222.......", bookingData);
 
     let foundBooking;
 
@@ -38,6 +40,10 @@ export async function POST(req: Request) {
         },
       });
     }
+
+    // console.log("Found booking:", foundBooking);
+
+    const { hotelId, roomId, includeBreakFast, ...updateData } = bookingData;
 
     if (foundBooking && payment_intent_id) {
       // Update the booking here
@@ -54,7 +60,20 @@ export async function POST(req: Request) {
 
         const res = await prismaDB.booking.update({
           where: { paymentIntentId: payment_intent_id, userId: user.id },
-          data: bookingData,
+          data: {
+            ...updateData,
+            breakFastIncluded: includeBreakFast,
+            Hotel: {
+              connect: {
+                id: hotelId,
+              },
+            },
+            room: {
+              connect: {
+                id: roomId,
+              },
+            },
+          },
         });
 
         if (!res) {

@@ -1,7 +1,7 @@
 "use client";
 
 import AminityItem from "@/components/ui/AminityItem";
-import { Button } from "@/components/ui/button";
+
 import { Button as Button2 } from "@/components/ui/button-2";
 import {
   Card,
@@ -21,26 +21,21 @@ import {
   Castle,
   Heater,
   Home,
-  Loader2,
   MapPin,
-  PencilLineIcon,
-  Trash,
   Trees,
   Tv,
   Users,
   UtensilsCrossed,
   VolumeXIcon,
-  Wand,
   Wifi,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
 
-import { addDays, differenceInCalendarDays, eachDayOfInterval } from "date-fns";
+import { differenceInCalendarDays } from "date-fns";
 
 import { useAuth } from "@clerk/nextjs";
 import useBookRooms from "@/hooks/useBookRooms";
@@ -170,6 +165,7 @@ const MyBookingClient: React.FC<MyBookingClientProps> = ({ booking }) => {
             <MapPin className="size-4" />
             {state?.name}, {hotel.city} {country?.name}
           </AminityItem>
+          <p className="pb-2">{hotel.locationDescription}</p>
         </CardDescription>
         <CardTitle>{room.title}</CardTitle>
         <CardDescription>{room.description}</CardDescription>
@@ -309,7 +305,29 @@ const MyBookingClient: React.FC<MyBookingClientProps> = ({ booking }) => {
           </div>
         </div>
       </CardContent>
-      <CardFooter></CardFooter>
+      <CardFooter className="flex gap-4 justify-between">
+        <Button2
+          isLoading={isLoading}
+          onClick={() => {
+            router.push(`/hotel-details/${hotel?.id}`);
+          }}
+          className=""
+          variant="outline"
+        >
+          View Details
+        </Button2>
+
+        {!booking.paymentStatus && booking.userId === userId && (
+          <Button2
+            isLoading={isLoading}
+            onClick={() => {
+              handleBooking();
+            }}
+          >
+            Pay Now
+          </Button2>
+        )}
+      </CardFooter>
     </Card>
   );
 };

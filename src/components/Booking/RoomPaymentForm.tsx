@@ -207,7 +207,7 @@ const RoomPaymentForm = ({ clientSecret, handlePaymentSuccess }: Props) => {
 
           <Button
             type="submit"
-            className="mt-4"
+            className="my-4"
             disabled={!stripe || !elements}
             isLoading={isLoading}
           >

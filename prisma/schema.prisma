@@ -87,7 +87,7 @@ model Booking {
   currency          String
   totalPrice        Float
   paymentStatus     Boolean  @default(false)
-  paymentIntentId   String
+  paymentIntentId   String   @unique // Mark as unique
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   Hotel             Hotel?   @relation(fields: [hotelId], references: [id])
@@ -95,5 +95,6 @@ model Booking {
   room              Room?    @relation(fields: [roomId], references: [id])
   roomId            String?  @db.ObjectId
 
+  @@unique([paymentIntentId, userId]) // Add a composite unique constraint
   @@map("bookings")
 }
