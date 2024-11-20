@@ -7,11 +7,13 @@ export const getHotels = async (searchParams: {
   state: string;
 }) => {
   const { title, country, state, city } = searchParams;
+
   try {
     const hotels = await prismaDB.hotel.findMany({
       where: {
         title: {
           contains: title,
+          mode: "insensitive",
         },
         country,
         state,

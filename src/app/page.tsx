@@ -17,6 +17,7 @@ export default async function Home({ searchParams }: HomeProps) {
   if (!hotels) {
     return <>No hotels found...</>;
   }
+
   return (
     <div className="">
       <HotelList hotels={hotels} />
