@@ -83,26 +83,28 @@ const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
 
   const form = useForm<HotelAddSchemaType>({
     resolver: zodResolver(HotelAddSchema),
-    defaultValues: hotel || {
-      title: "",
-      description: "",
-      country: "",
-      city: "",
-      state: "",
-      image: "",
-      locationDescription: "",
-      gym: false,
-      spa: false,
-      laundry: false,
-      restaurant: false,
-      bar: false,
-      swimmingPool: false,
-      freeWifi: false,
-      freeParking: false,
-      bikeRental: false,
-      movieNight: false,
-      coffeeShop: false,
-    },
+    defaultValues: hotel
+      ? { ...hotel, locationDescription: hotel.locationDescription || "" }
+      : {
+          title: "",
+          description: "",
+          country: "",
+          city: "",
+          state: "",
+          image: "",
+          locationDescription: "",
+          gym: false,
+          spa: false,
+          laundry: false,
+          restaurant: false,
+          bar: false,
+          swimmingPool: false,
+          freeWifi: false,
+          freeParking: false,
+          bikeRental: false,
+          movieNight: false,
+          coffeeShop: false,
+        },
   });
 
   useEffect(() => {

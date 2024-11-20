@@ -1,4 +1,5 @@
 "use client";
+
 import LocationForm from "@/components/Dropzone/LocationForm";
 import OpeningHoursForm from "@/components/Dropzone/OpeningHoursForm";
 import Stepper from "@/components/Dropzone/Stepper";
