@@ -63,7 +63,7 @@ export type HotelWithRooms = Hotel & {
 };
 
 interface AddHotelFromProps {
-  hotel: HotelWithRooms | null;
+  hotel?: HotelWithRooms | null;
 }
 
 const AddHotelForm = ({ hotel }: AddHotelFromProps) => {
