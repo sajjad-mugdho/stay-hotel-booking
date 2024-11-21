@@ -5,7 +5,6 @@ export default function robot(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: "/api/*",
     },
     sitemap: "https://stay-hotel.vercel.app/sitemap.xml",
   };
