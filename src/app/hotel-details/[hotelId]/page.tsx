@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { getBookingById } from "../../../../actions/getBookingById";
 import { getHotelById } from "../../../../actions/getHotelById";
 import HotelDetailsClient from "@/components/hotel/HotelDetailsClient";
@@ -7,6 +8,12 @@ interface HotelDetailsProps {
     hotelId: string;
   };
 }
+
+export const metadata: Metadata = {
+  title: "Hotel Details",
+  description: "View details and bookings for the selected hotel.",
+  keywords: ["hotel", "details", "bookings", "stay", "travel"],
+};
 
 const HotelDetails = async ({ params }: HotelDetailsProps) => {
   const hotel = await getHotelById(params.hotelId);

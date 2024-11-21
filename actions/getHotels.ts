@@ -1,11 +1,13 @@
 import prismaDB from "@/lib/prisma";
 
-export const getHotels = async (searchParams: {
-  title: string;
-  country: string;
-  city: string;
-  state: string;
-}) => {
+interface SearchParams {
+  title?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+}
+
+export const getHotels = async (searchParams: SearchParams) => {
   const { title, country, state, city } = searchParams;
 
   try {

@@ -11,9 +11,33 @@ import LocationFilter from "@/components/LocationFilter";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Stay-Hotel || Home",
-  description: "It's a hotel booking website",
-  icons: { icon: "/logo.svg" },
+  metadataBase: new URL("https://stay-hotel.vercel.app/"),
+  keywords: ["hotel", "booking", "stay", "travel", "vacation"],
+  title: {
+    default: "Stay Hotel",
+    template: "%s | Stay Hotel",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+
+    url: "https://stay-hotel.vercel.app/",
+    title: "Stay Hotel",
+    description:
+      "Find the best hotels for your stay, vacation, or travel. Book now! ",
+    images: [
+      {
+        url: "https://stay-hotel-booking.vercel.app/logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "Stay Hotel",
+      },
+    ],
+  },
+
+  icons: {
+    icon: "https://stay-hotel-booking.vercel.app/logo.svg",
+  },
 };
 
 export default function RootLayout({

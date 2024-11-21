@@ -1,7 +1,14 @@
 import HotelList from "@/components/hotel/HotelList";
 import { getHotelsByUserId } from "../../../actions/getHotelsByUserId";
+import { Metadata } from "next";
 
 type Props = {};
+
+export const metadata: Metadata = {
+  title: "My Hotels",
+  description: "View and manage your hotel properties",
+  keywords: ["hotels", "properties", "management", "user hotels"],
+};
 
 const MyHotels = async (props: Props) => {
   const hotels = await getHotelsByUserId();

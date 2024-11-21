@@ -2,6 +2,13 @@ import React from "react";
 import { getHotelById } from "../../../../actions/getHotelById";
 import { auth } from "@clerk/nextjs";
 import AddHotelForm, { HotelWithRooms } from "@/components/hotel/AddHotelForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Hotel Details",
+  description: "View and edit hotel details",
+  keywords: ["hotel", "details", "edit", "rooms"],
+};
 
 type HotelPageProps = {
   params: {
