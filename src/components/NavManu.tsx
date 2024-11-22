@@ -27,13 +27,13 @@ export function NavManu() {
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer flex gap-2 items-center"
-          onClick={() => router.push("/hotel/new")}
+          onClick={() => router.push("/my-hotels")}
         >
           <Hotel size={15} /> <span>My Hotels</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer flex gap-2 items-center"
-          onClick={() => router.push("/hotel/new")}
+          onClick={() => router.push("/my-bookings")}
         >
           <BookOpenCheck size={15} /> <span>My Bookings</span>
         </DropdownMenuItem>
