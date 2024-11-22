@@ -20,7 +20,7 @@ export function NavManu() {
         <ChevronsUpDown />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <Link href="/add-hotel">
+        <Link href="/hotel/new">
           <DropdownMenuItem
             className="cursor-pointer flex gap-2 items-center"
             // onClick={() => router.push("/add-hotel")}
