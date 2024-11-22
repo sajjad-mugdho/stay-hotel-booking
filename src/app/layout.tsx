@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/Theme/theme-provider";
 import Container from "@/components/Container";
 import LocationFilter from "@/components/LocationFilter";
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -57,6 +58,7 @@ export default function RootLayout({
           >
             <main className="flex flex-col min-h-screen bg-secondary">
               <Navbar />
+              <NextTopLoader />
               <LocationFilter />
               <section className="flex-grow">
                 <Container>{children}</Container>
