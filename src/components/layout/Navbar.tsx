@@ -39,16 +39,23 @@ const Navbar = (props: Props) => {
               </>
             ) : (
               <>
-                <Button size="sm" onClick={() => router.push("/sign-in")}>
-                  Sign In
-                </Button>
-                <Button
-                  onClick={() => router.push("/sign-up")}
-                  variant="outline"
-                  size="sm"
-                >
-                  Sign Up
-                </Button>
+                <Link href="/sign-in">
+                  <Button
+                    size="sm"
+                    // onClick={() => router.push("/sign-in")}
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/sign-up">
+                  <Button
+                    // onClick={() => router.push("/sign-up")}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
               </>
             )}
           </div>

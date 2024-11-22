@@ -58,9 +58,10 @@ export default function RootLayout({
           >
             <main className="flex flex-col min-h-screen bg-secondary">
               <Navbar />
-              <NextTopLoader />
+
               <LocationFilter />
               <section className="flex-grow">
+                <NextTopLoader />
                 <Container>{children}</Container>
               </section>
             </main>

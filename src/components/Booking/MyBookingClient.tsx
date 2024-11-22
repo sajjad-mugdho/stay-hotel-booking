@@ -41,6 +41,7 @@ import { useAuth } from "@clerk/nextjs";
 import useBookRooms from "@/hooks/useBookRooms";
 import useLocation from "@/hooks/useLocation";
 import moment from "moment";
+import Link from "next/link";
 
 interface MyBookingClientProps {
   booking: Booking & { room: Room | null } & { hotel: Hotel | null };
@@ -306,16 +307,18 @@ const MyBookingClient: React.FC<MyBookingClientProps> = ({ booking }) => {
         </div>
       </CardContent>
       <CardFooter className="flex gap-4 justify-between">
-        <Button2
-          isLoading={isLoading}
-          onClick={() => {
-            router.push(`/hotel-details/${hotel?.id}`);
-          }}
-          className=""
-          variant="outline"
-        >
-          View Details
-        </Button2>
+        <Link href={`/hotel-details/${hotel?.id}`}>
+          <Button2
+            isLoading={isLoading}
+            // onClick={() => {
+            //   router.push(`/hotel-details/${hotel?.id}`);
+            // }}
+            className=""
+            variant="outline"
+          >
+            View Details
+          </Button2>
+        </Link>
 
         {!booking.paymentStatus && booking.userId === userId && (
           <Button2

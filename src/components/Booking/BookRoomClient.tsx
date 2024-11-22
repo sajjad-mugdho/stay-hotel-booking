@@ -8,6 +8,7 @@ import RoomPaymentForm from "./RoomPaymentForm";
 import { useTheme } from "next-themes";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Props = {};
 
@@ -45,21 +46,25 @@ const BookRoomClient = (props: Props) => {
           Oops! This page could not be properly loaded...
         </div>
         <div className="flex gap-4 items-center">
-          <Button
-            variant="outline"
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            Go Home
-          </Button>
-          <Button
-            onClick={() => {
-              router.push("/my-booking");
-            }}
-          >
-            View My Booking
-          </Button>
+          <Link href="/">
+            <Button
+              variant="outline"
+              // onClick={() => {
+              //   router.push("/");
+              // }}
+            >
+              Go Home
+            </Button>
+          </Link>
+          <Link href="/my-bookings">
+            <Button
+            // onClick={() => {
+            //   router.push("/my-bookings");
+            // }}
+            >
+              View My Booking
+            </Button>
+          </Link>
         </div>
       </div>
     );
@@ -68,13 +73,15 @@ const BookRoomClient = (props: Props) => {
     return (
       <div className="flex items-center flex-col gap-4">
         <div className="text-teal-500 text-center">Payment Success</div>
-        <Button
-          onClick={() => {
-            router.push("/my-booking");
-          }}
-        >
-          View Booking
-        </Button>
+        <Link href="/my-bookings">
+          <Button
+          // onClick={() => {
+          //   router.push("/my-booking");
+          // }}
+          >
+            View Booking
+          </Button>
+        </Link>
       </div>
     );
   }
