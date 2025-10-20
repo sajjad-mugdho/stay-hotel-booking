@@ -4,6 +4,8 @@
 
 ## Features
 
+# Tamim
+
 ### 🔍 Search and Filter:
 
 - Search hotels by title, country, state, and city.
