@@ -1,6 +1,6 @@
 # 🏨 Stay Hotel Web App
 
-A modern hotel listing web application built with Next.js that allows users to search for hotels based on filters such as country, state, city, and title. The site displays detailed hotel information, including amenities, images, and descriptions, for a seamless user experience.
+***A modern hotel listing*** web application built with Next.js that allows users to search for hotels based on filters such as country, state, city, and title. The site displays detailed hotel information, including amenities, images, and descriptions, for a seamless user experience.
 
 ## Features
 
